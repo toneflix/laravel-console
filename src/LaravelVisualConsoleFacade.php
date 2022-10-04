@@ -1,13 +1,13 @@
 <?php
 
-namespace ToneflixCode\LaravelConsole;
+namespace ToneflixCode\LaravelVisualConsole;
 
 use Illuminate\Support\Facades\Facade;
 
 /**
- * @see \ToneflixCode\LaravelConsole\Skeleton\SkeletonClass
+ * @see \ToneflixCode\LaravelVisualConsole\Skeleton\SkeletonClass
  */
-class LaravelConsoleFacade extends Facade
+class LaravelVisualConsoleFacade extends Facade
 {
     /**
      * Get the registered name of the component.
@@ -16,6 +16,6 @@ class LaravelConsoleFacade extends Facade
      */
     protected static function getFacadeAccessor()
     {
-        return 'laravel-console';
+        return 'laravel-visualconsole';
     }
 }

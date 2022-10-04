@@ -2,7 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Storage;
-use ToneflixCode\LaravelConsole\Controllers\ManagementController;
+use ToneflixCode\LaravelVisualConsole\Controllers\ManagementController;
 
 Route::prefix('console')->name('console.')->group(function () {
     Route::get('/login', [ManagementController::class, 'login'])

@@ -1,6 +1,6 @@
 <?php
 
-namespace ToneflixCode\LaravelConsole\Commands;
+namespace ToneflixCode\LaravelVisualConsole\Commands;
 
 use Carbon\Carbon;
 use Illuminate\Console\Command;

@@ -1,11 +1,11 @@
 {
-    "name": "toneflix-code/laravel-console",
+    "name": "toneflix-code/laravel-visualconsole",
     "description": "A Laravel package to help with frequent artisan tasks and more.",
     "keywords": [
         "toneflix-code",
-        "laravel-console"
+        "laravel-visualconsole"
     ],
-    "homepage": "https://github.com/toneflix-code/laravel-console",
+    "homepage": "https://github.com/toneflix-code/laravel-visualconsole",
     "license": "MIT",
     "type": "library",
     "authors": [
@@ -29,12 +29,12 @@
     },
     "autoload": {
         "psr-4": {
-            "ToneflixCode\\LaravelConsole\\": "src"
+            "ToneflixCode\\LaravelVisualConsole\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "ToneflixCode\\LaravelConsole\\Tests\\": "tests"
+            "ToneflixCode\\LaravelVisualConsole\\Tests\\": "tests"
         }
     },
     "scripts": {
@@ -47,10 +47,10 @@
     "extra": {
         "laravel": {
             "providers": [
-                "ToneflixCode\\LaravelConsole\\LaravelConsoleServiceProvider"
+                "ToneflixCode\\LaravelVisualConsole\\LaravelVisualConsoleServiceProvider"
             ],
             "aliases": {
-                "LaravelConsole": "ToneflixCode\\LaravelConsole\\LaravelConsoleFacade"
+                "LaravelVisualConsole": "ToneflixCode\\LaravelVisualConsole\\LaravelVisualConsoleFacade"
             }
         }
     }

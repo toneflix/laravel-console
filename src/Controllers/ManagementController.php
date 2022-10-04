@@ -1,8 +1,8 @@
 <?php
 
-namespace ToneflixCode\LaravelConsole\Controllers;
+namespace ToneflixCode\LaravelVisualConsole\Controllers;
 
-use ToneflixCode\LaravelConsole\HttpStatus;
+use ToneflixCode\LaravelVisualConsole\HttpStatus;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Artisan;
@@ -68,7 +68,7 @@ class ManagementController extends Controller
         
         Auth::attemptWhen($credentials);
         if (Auth::attemptWhen($credentials, function ($user) {
-            return $user[config('laravel-console.permission_field')] == config('laravel-console.permission_value');
+            return $user[config('laravel-visualconsole.permission_field')] == config('laravel-visualconsole.permission_value');
         })) {
             return redirect()->route('console.user');
         }

@@ -1,6 +1,6 @@
 <?php
 
-namespace ToneflixCode\LaravelConsole;
+namespace ToneflixCode\LaravelVisualConsole;
 
 /**
  * HTTP Status codes
