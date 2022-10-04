@@ -2,15 +2,9 @@
 
 namespace ToneflixCode\LaravelVisualConsole\Commands;
 
-use Carbon\Carbon;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Artisan;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-use Madnest\Madzipper\Madzipper;
-use Spatie\SlackAlerts\Facades\SlackAlert;
 
 class CommandConsole extends Command
 {

@@ -2,8 +2,8 @@
 
 namespace ToneflixCode\LaravelVisualConsole;
 
-use App\Console\Commands\CommandConsole;
 use Illuminate\Support\ServiceProvider;
+use ToneflixCode\LaravelVisualConsole\Commands\CommandConsole;
 
 class LaravelVisualConsoleServiceProvider extends ServiceProvider
 {
