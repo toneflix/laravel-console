@@ -8,18 +8,20 @@ use Illuminate\Support\Str;
 
 class CommandConsole extends Command
 {
+    use Backup, Reset, Restore;
     /**
      * The name and signature of the console command.
      *
      * @var string
      */
-    protected $signature = 'system:reset
+    protected $signature = 'system:control
                             {action? : Action to perform [reset, backup, restore]}
                             {--w|wizard : Let the wizard help you manage the procedure.}
                             {--r|restore : Restore the system to the last backup or provide the --signature option to restore a known backup signature.}
                             {--s|signature= : Set the backup signature value to restore a particular known backup. E.g. 2022-04-26_16-05-34.}
                             {--b|backup : Do a complete system backup before the reset.}
-                            {--d|delete : If the restore option is set, this option will delete the backup files after successfull restore.}';
+                            {--d|delete : If the restore option is set, this option will delete the backup files after successfull restore.}
+                            {--f|force : Force the action to execute.}';
 
     /**
      * The console command description.
@@ -81,12 +83,29 @@ class CommandConsole extends Command
 
             return 0;
         } else {
+
+            if (!$action) {
+                $this->error('Please provide an action to perform [reset, backup, restore].');
+                return 1;
+            }
+
             // Restore the system backup
             if ($restore) {
                 return $this->restore($signature, $delete);
             }
 
+            if (!app()->runningInConsole() && !$this->option('force')) {
+                $this->error('Please Run this action from console or use the [--force] flag.');
+                return 1;
+            }
             // Reset the system
+
+            if (!$this->option('force')) {
+                if (($i = $this->ask("Please enter \"".env('APP_NAME')."\" to continue")) !== env('APP_NAME')) {
+                    $this->error("\"$i\" is not expected, action aborted!");
+                    return 1;
+                }
+            }
             return $this->reset($backup);
         }
     }

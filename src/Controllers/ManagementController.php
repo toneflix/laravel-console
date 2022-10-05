@@ -2,6 +2,7 @@
 
 namespace ToneflixCode\LaravelVisualConsole\Controllers;
 
+use App\Http\Controllers\Controller;
 use ToneflixCode\LaravelVisualConsole\HttpStatus;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -45,12 +46,12 @@ class ManagementController extends Controller
         $messages = session()->get('messages');
         $commands = $this->commands;
 
-        return view('web-user', compact('user', 'errors', 'code', 'action', 'messages', 'commands'));
+        return view('laravel-visualconsole::web-user', compact('user', 'errors', 'code', 'action', 'messages', 'commands'));
     }
 
     public function login()
     {
-        return view('login');
+        return view('laravel-visualconsole::login');
     }
 
     /**
@@ -65,12 +66,15 @@ class ManagementController extends Controller
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
-        
-        Auth::attemptWhen($credentials);
-        if (Auth::attemptWhen($credentials, function ($user) {
+
+        if (Auth::guard('lvc')->attemptWhen($credentials, function ($user) {
+            if (is_array($roles = $user[config('laravel-visualconsole.permission_field')])) {
+                return in_array(config('laravel-visualconsole.permission_value'), $roles);
+            }
+
             return $user[config('laravel-visualconsole.permission_field')] == config('laravel-visualconsole.permission_value');
         })) {
-            return redirect()->route('console.user');
+            return redirect()->route('laravel-visualconsole.user');
         }
 
         return back()->withErrors([
@@ -87,10 +91,10 @@ class ManagementController extends Controller
         $commands = $this->commands;
 
         if ($code) {
-            return redirect()->route('console.user')->with(compact('errors', 'code', 'action'))->withInput();
+            return redirect()->route('laravel-visualconsole.user')->with(compact('errors', 'code', 'action'))->withInput();
         }
 
-        return view('web-user', compact('user', 'errors', 'code', 'action', 'commands'));
+        return view('laravel-visualconsole::web-user', compact('user', 'errors', 'code', 'action', 'commands'));
     }
 
     public function artisan(Response $response, $command, $params = null)
@@ -122,7 +126,7 @@ class ManagementController extends Controller
         if (! $request->isXmlHttpRequest()) {
             session()->flush();
 
-            return response()->redirectToRoute('console.login');
+            return response()->redirectToRoute('laravel-visualconsole.login');
         }
 
         return $this->buildResponse([

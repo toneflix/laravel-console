@@ -11,7 +11,7 @@ use Illuminate\Support\Str;
 use Madnest\Madzipper\Madzipper;
 use Spatie\SlackAlerts\Facades\SlackAlert;
 
-class Restore extends Command
+trait Restore
 {
     /**
      * Perform a system restoration from the last or one of the available backups
@@ -20,7 +20,7 @@ class Restore extends Command
      * @param  bool  $delete
      * @return int
      */
-    protected function now($signature, $delete = false): int
+    public function restore($signature, $delete = false): int
     {
         $this->info(Str::of(env('APP_URL'))->trim('/http://https://').' Is being restored.');
         SlackAlert::message(Str::of(env('APP_URL'))->trim('/http://https://').' Is being restored.');

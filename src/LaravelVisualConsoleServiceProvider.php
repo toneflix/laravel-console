@@ -2,8 +2,11 @@
 
 namespace ToneflixCode\LaravelVisualConsole;
 
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\ServiceProvider;
 use ToneflixCode\LaravelVisualConsole\Commands\CommandConsole;
+use ToneflixCode\LaravelVisualConsole\Models\User;
 
 class LaravelVisualConsoleServiceProvider extends ServiceProvider
 {
@@ -12,13 +15,34 @@ class LaravelVisualConsoleServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+        Auth::viaRequest('lvsusers-guard', function (Request $request) {
+            dd('lvc in boots', $request);
+            return User::where('token', $request->token)->first();
+        });
+
+        config([
+            'auth.guards.lvc' => [
+                'driver' => 'session',
+                'provider' => 'lvsusers',
+            ],
+            'auth.providers.lvsusers' => [
+                'driver' => 'eloquent',
+                'model' => config('laravel-visualconsole.user_model', User::class),
+            ],
+        ]);
+
+        Blade::componentNamespace("ToneflixCode\\LaravelVisualConsole\\View\\Components", 'visualconsole');
+        config([ 'slack-alerts.webhook_urls' => config('laravel-visualconsole.slack_webhook_urls', env('SLACK_ALERT_WEBHOOK'))]);
         /*
          * Optional methods to load your package assets
          */
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'laravel-visualconsole');
-        // $this->loadViewsFrom(__DIR__.'/../resources/views', 'laravel-visualconsole');
+        $this->loadViewsFrom(__DIR__.'/../views', 'laravel-visualconsole');
         // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        // $this->loadRoutesFrom(__DIR__.'/routes.php');
+        $this->loadRoutesFrom(__DIR__.'/routes.php');
+        if (file_exists($routes = base_path('routes/laravel-visualconsole/routes.php'))) {
+            $this->loadRoutesFrom($routes);
+        }
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
@@ -31,9 +55,9 @@ class LaravelVisualConsoleServiceProvider extends ServiceProvider
             ], 'views');
 
             // Publishing assets.
-            /*$this->publishes([
-                __DIR__.'/../resources/assets' => public_path('vendor/laravel-visualconsole'),
-            ], 'assets');*/
+            $this->publishes([
+                __DIR__.'/routes' => app_path('routes/laravel-visualconsole'),
+            ], 'assets');
 
             // Publishing the translation files.
             /*$this->publishes([

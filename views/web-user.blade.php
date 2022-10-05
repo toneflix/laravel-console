@@ -1,4 +1,4 @@
-<x-layout>
+<x-visualconsole::layout>
     <x-slot name="title">
         @isset($choose)
             Choose Backup Signature
@@ -8,7 +8,7 @@
     </x-slot>
     @if (isset($errors) || isset($messages) || isset($code))
         @if ($errors)
-            <x-alert :message="$errors->first()" color="red" />
+            <x-visualconsole::alert :message="$errors->first()" color="red" />
         @endif
         @isset($messages)
             <div class="errors m-5">{{ $messages->first() }}</div>
@@ -64,12 +64,12 @@
                     @endif
                 </div>
             </label>
-            <x-commands :commands="$commands" />
+            <x-visualconsole::commands :commands="$commands" />
         </div>
     </div>
 
     @push('bottom')
-        <x-modal title="Confirm Action" name="confirm" x-cloak>
+        <x-visualconsole::modal title="Confirm Action" name="confirm" x-cloak>
             Are you sure you want to perform this action? This might have very dangerous consequences.
             <x-slot name="buttons">
                 <button x-ref="confirmation" @click="location.href = $refs.confirmation.dataset.href"
@@ -77,10 +77,10 @@
                     Accept
                 </button>
             </x-slot>
-        </x-modal>
+        </x-visualconsole::modal>
 
         <script>
             let artisan = document.querySelector('select#artisan');
         </script>
     @endpush
-</x-layout>
+</x-visualconsole::layout>
