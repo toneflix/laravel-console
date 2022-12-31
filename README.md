@@ -5,7 +5,7 @@
 
 <!-- ![GitHub Actions](https://github.com/toneflix-code/laravel-visualconsole/actions/workflows/main.yml/badge.svg) -->
 
-Laravel Visual Console is designed to give you a visual experience of your most frequent Laravel processes, artisan commands, and system management.
+Laravel Visual Console is designed to give you a visual experience of your most frequent Laravel processes, artisan commands, and system management. This could come in really handy if you build and manage APIs that don't require you to build any additional user interfaces.
 ![preview](https://user-images.githubusercontent.com/52163001/210129782-1c701a9f-6de6-4e00-9a9a-bc731d7965c2.png)
 
 ## Installation
