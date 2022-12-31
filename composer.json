@@ -22,7 +22,8 @@
         "masbug/flysystem-google-drive-ext": "^2.2",
         "spatie/laravel-slack-alerts": "^1.1",
         "rap2hpoutre/laravel-log-viewer": "^2.2",
-        "msztorc/laravel-env": "^1.2"
+        "msztorc/laravel-env": "^1.2",
+        "zanysoft/laravel-zip": "^2.0"
     },
     "require-dev": {
         "orchestra/testbench": "^6.0",
