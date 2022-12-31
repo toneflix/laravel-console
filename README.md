@@ -5,7 +5,8 @@
 
 <!-- ![GitHub Actions](https://github.com/toneflix-code/laravel-visualconsole/actions/workflows/main.yml/badge.svg) -->
 
-Laravel Visual Console is designed to give you a visual experince of your most frequent Laravel proccesses and artisan commands, and system management.
+Laravel Visual Console is designed to give you a visual experience of your most frequent Laravel processes, artisan commands, and system management.
+![preview](https://user-images.githubusercontent.com/52163001/210129782-1c701a9f-6de6-4e00-9a9a-bc731d7965c2.png)
 
 ## Installation
 
@@ -60,9 +61,9 @@ The default setup is configured to work with your current authentication model.
 
 ### Authorization
 
-By defautlt the package will check the `privileges` field of the current authentication model `[User]` for if the the authenticating user has the `admin` Privilege assuming the value of the field is a numeric list of attribute/privileges, if it fails to confirm it checks if the value of the field is exactly `admin`, once confirmed the user is authenticated.
+By default, the package will check the `privileges` field of the current authentication model `[User]` for if the authenticating user has the `admin` Privilege assuming the value of the field is a numeric list of attributes/privileges, if it fails to confirm it checks if the value of the field is exactly `admin`, once confirmed the user is authenticated.
 
-If you which to change the behavior you should check the [Post Installation](#post-installation) section for how to publish the config and modify the suite your requirements, you can also set the `permission_field` and `permission_value` config values to `null` in order to disable this behaviour. The implicatio of disabling the feature is that anyone with login access can also access the visual console.
+If you which to change the behaviour you should check the [Post Installation](#post-installation) section for how to publish the config and modify it to suit your requirements, you can also set the `permission_field` and `permission_value` config values to `null` in order to disable this behaviour. Disabling the feature implies that anyone with log in access can also access the visual console.
 
 ### Testing
 
@@ -72,7 +73,7 @@ composer test
 
 ### Changelog
 
-Please see [CHANGELOG](CHANGELOG.md) for more information what has changed recently.
+Please see [CHANGELOG](CHANGELOG.md) for more information on what has changed recently.
 
 ## Contributing
 
@@ -80,7 +81,7 @@ Please see [CONTRIBUTING](CONTRIBUTING.md) for details.
 
 ### Security
 
-If you discover any security related issues, please email code@toneflix.com.ng instead of using the issue tracker.
+If you discover any security-related issues, please email code@toneflix.com.ng instead of using the issue tracker.
 
 ## Credits
 
