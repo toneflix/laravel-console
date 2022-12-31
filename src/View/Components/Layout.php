@@ -23,6 +23,7 @@ class Layout extends Component
      */
     public function render()
     {
-        return view('laravel-visualconsole::layout');
+        echo 123;
+        return view('visualconsole::layout');
     }
 }

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Madnest\Madzipper\Madzipper;
 use Spatie\SlackAlerts\Facades\SlackAlert;
+use ZanySoft\Zip\Zip;
 
 trait Backup
 {
@@ -53,16 +54,23 @@ trait Backup
 
         // Backup the files.
         $zip_backup_path = "{$backupPath}$filename.zip";
-        $zip = new Madzipper;
+        // $zip = new Madzipper;
+        $zip = new Zip;
 
-        $zipping = $zip->make(storage_path("tempBkpDir1994/$filename.zip"))
-            ->folder('app')
-            ->add("storage/app")->close();
+
+        $zipping = $zip->create(storage_path("tempBkpDir1994/$filename.zip"));
+
+        // $zipping = $zip->make(storage_path("tempBkpDir1994/$filename.zip"))
+        //     ->folder('app')
+        //     ->add(storage_path('/'))->close();
+        $zip->add(storage_path('/'));
+        $zip->close();
 
         $signature = Str::of($filename)->substr(0, -4)->replace(['backup-', '/'], '');
         if (! File::exists(storage_path("tempBkpDir1994"))) {
             File::makeDirectory(storage_path("tempBkpDir1994"));
         }
+
         $backupDisk->put($zip_backup_path, File::get(storage_path("tempBkpDir1994/$filename.zip")));
         // File::deleteDirectory(storage_path("tempBkpDir1994"));
 
@@ -72,15 +80,19 @@ trait Backup
             if ($link === 'Yes' && $backupDisk->exists("backups/$filename.sql")) {
 
                 // Generate a downloadable link for this backup
-                $zip = new Madzipper;
-                $zip->make(storage_path("tempBkpDir1994/pack-$filename.zip"))->folder('backups')
-                    ->add([storage_path("tempBkpDir1994/$filename.sql"), storage_path("tempBkpDir1994/$filename.zip")]);
+                // $zip = new Madzipper;
+                $zip = new Zip;
+                $zip->create(storage_path("tempBkpDir1994/pack-$filename.zip"));
+                $zip->add([storage_path("tempBkpDir1994/$filename.sql"), storage_path("tempBkpDir1994/$filename.zip")]);
+                $zip->close();
+                // $zip->make(storage_path("tempBkpDir1994/pack-$filename.zip"))->folder('backups')
+                //     ->add([storage_path("tempBkpDir1994/$filename.sql"), storage_path("tempBkpDir1994/$filename.zip")]);
 
-                $link_url = route('in.secure.download', $filename.'.zip');
+                $link_url = route(config('laravel-visualconsole.route_prefix', 'system') . '.secure.download', $filename.'.zip');
 
                 $mail = app()->runningInConsole() ? $this->choice('Should we mail you the link?', ['No, I\'ll copy from here.', 'Yes, mail me'], 1, 2) : 'No';
 
-                if ($mail === 'Yes, mail me' && $zip->getFilePath()) {
+                if ($mail === 'Yes, mail me' && $zip->getPath()) {
                     $address = $this->ask('Email Address:');
                     Mail::send('laravel-visualconsole::email', [
                         'name' => ($name = collect(explode('@', $address)))->last(),
@@ -94,7 +106,7 @@ trait Backup
 
                     SlackAlert::message("We have sent the download link to your backup file to $address.");
                     $this->info("We have sent the download link to your backup file to $address.");
-                } elseif (! $zip->getFilePath()) {
+                } elseif (! $zip->getPath()) {
                     SlackAlert::message('You have requested that we we mail you the link to your backup file but we failed to fetch the link.');
                     $this->error('Failed to fetch link.');
                 } else {
@@ -106,11 +118,15 @@ trait Backup
             }
         } else {
             // Generate a downloadable link for this backup
-            $zip = new Madzipper;
-            $zip->make("{$backupPath}$filename.zip")->folder('backups')
-                ->add([$backupPath.$filename.'.sql', $backupPath.$filename.'.zip']);
+            $zip = new Zip;
+            $zip->create(storage_path("{$backupPath}$filename.zip"));
+            $zip->add([storage_path($backupPath.$filename.'.sql'), storage_path($backupPath.$filename.'.zip')]);
+            $zip->close();
+            // $zip = new Madzipper;
+            // $zip->make("{$backupPath}$filename.zip")->folder('backups')
+            //     ->add([$backupPath.$filename.'.sql', $backupPath.$filename.'.zip']);
 
-            $link_url = route('in.secure.download', $filename.'.zip');
+            $link_url = route(config('laravel-visualconsole.route_prefix', 'system') . '.secure.download', $filename.'.zip');
             $this->info("Download your backup file through this link: $link_url.");
         }
 

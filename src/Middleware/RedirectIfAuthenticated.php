@@ -22,7 +22,7 @@ class RedirectIfAuthenticated
 
         foreach ($guards as $guard) {
             if (Auth::guard($guard)->check()) {
-                return redirect(route('laravel-visualconsole.user'));
+                return redirect(route(config('laravel-visualconsole.route_prefix', 'lvc') . '.console.user'));
             }
         }
 

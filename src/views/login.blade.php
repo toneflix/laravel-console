@@ -10,9 +10,11 @@
         <title>{{ config('app.name') }}</title>
     @endempty
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
-    <link rel="stylesheet" href="{{ route('in.private.file', 'tailwind.output.css') }}" />
+    <link rel="stylesheet"
+        href="{{ route(config('laravel-visualconsole.route_prefix', 'system') . '.in.asset.file', 'tailwind.output.css') }}" />
     <script src="https://cdn.jsdelivr.net/gh/alpinejs/alpine@v2.x.x/dist/alpine.min.js" defer></script>
-    <script src="{{ route('in.private.file', 'init-alpine.js') }}"></script>
+    <script src="{{ route(config('laravel-visualconsole.route_prefix', 'system') . '.in.asset.file', 'init-alpine.js') }}">
+    </script>
 </head>
 
 <body>
@@ -21,9 +23,11 @@
             <div class="flex flex-col overflow-y-auto md:flex-row">
                 <div class="h-32 md:h-auto md:w-1/2">
                     <img aria-hidden="true" class="object-cover w-full h-full dark:hidden"
-                        src="{{ route('in.private.file', 'logo.png') }}" alt="Banner" />
+                        src="{{ route(config('laravel-visualconsole.route_prefix', 'system') . '.in.asset.file', 'logo.png') }}"
+                        alt="Banner" />
                     <img aria-hidden="true" class="hidden object-cover w-full h-full dark:block"
-                        src="{{ route('in.private.file', 'bg.jpg') }}" alt="Banner" />
+                        src="{{ route(config('laravel-visualconsole.route_prefix', 'system') . '.in.asset.file', 'bg.jpg') }}"
+                        alt="Banner" />
                 </div>
                 <div class="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
                     @isset($api_welcome)
@@ -38,17 +42,19 @@
                             </div>
                         @endforeach
                     @else
-                        <form class="w-full" action="{{ route('laravel-visualconsole.login') }}" method="POST">
+                        <form class="w-full"
+                            action="{{ route(config('laravel-visualconsole.route_prefix', 'system') . '.console.login', 'bg.jpg') }}"
+                            method="POST">
                             <h1 class="mb-4 text-xl font-semibold text-gray-700 dark:text-gray-200">
                                 Console Login
                             </h1>
                             @csrf
-                            {{dump($errors)}}
+
                             <label class="block text-sm">
                                 <span class="text-gray-700 dark:text-gray-400">Email</span>
                                 <input
                                     class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-red-400 focus:outline-none focus:shadow-outline-red dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                                    placeholder="user@example.com" name="email" value="{{old('email')}}" />
+                                    placeholder="user@example.com" name="email" value="{{ old('email') }}" />
                                 @error('email')
                                     <span class="text-xs text-red-600 dark:text-red-400">
                                         {{ $message }}
@@ -59,7 +65,8 @@
                                 <span class="text-gray-700 dark:text-gray-400">Password</span>
                                 <input
                                     class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-red-400 focus:outline-none focus:shadow-outline-red dark:text-gray-300 dark:focus:shadow-outline-gray form-input"
-                                    placeholder="***************" name="password" type="password" value="{{old('password')}}" />
+                                    placeholder="***************" name="password" type="password"
+                                    value="{{ old('password') }}" />
                                 @error('password')
                                     <span class="text-xs text-red-600 dark:text-red-400">
                                         {{ $message }}

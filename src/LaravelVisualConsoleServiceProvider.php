@@ -2,11 +2,14 @@
 
 namespace ToneflixCode\LaravelVisualConsole;
 
-use Illuminate\Support\Facades\Auth;
+use App\Models\User;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
 use ToneflixCode\LaravelVisualConsole\Commands\CommandConsole;
-use ToneflixCode\LaravelVisualConsole\Models\User;
 
 class LaravelVisualConsoleServiceProvider extends ServiceProvider
 {
@@ -15,61 +18,99 @@ class LaravelVisualConsoleServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        Auth::viaRequest('lvsusers-guard', function (Request $request) {
-            dd('lvc in boots', $request);
-            return User::where('token', $request->token)->first();
-        });
-
-        config([
-            'auth.guards.lvc' => [
-                'driver' => 'session',
-                'provider' => 'lvsusers',
-            ],
-            'auth.providers.lvsusers' => [
-                'driver' => 'eloquent',
-                'model' => config('laravel-visualconsole.user_model', User::class),
-            ],
-        ]);
-
         Blade::componentNamespace("ToneflixCode\\LaravelVisualConsole\\View\\Components", 'visualconsole');
         config([ 'slack-alerts.webhook_urls' => config('laravel-visualconsole.slack_webhook_urls', env('SLACK_ALERT_WEBHOOK'))]);
+
+        config([
+            'filesystems.disks' => array_merge(
+                config('filesystems.disks', []),
+                ['google' => [
+                    'driver' => config('laravel-visualconsole.backup_disk', 'google'),
+                    'clientId' => env('GOOGLE_DRIVE_CLIENT_ID'),
+                    'clientSecret' => env('GOOGLE_DRIVE_CLIENT_SECRET'),
+                    'refreshToken' => env('GOOGLE_DRIVE_REFRESH_TOKEN'),
+                    'folder' => env('GOOGLE_DRIVE_FOLDER'), // without folder is root of drive or team drive
+                    'teamDriveId' => env('GOOGLE_DRIVE_TEAM_DRIVE_ID'),
+                ]],
+        )]);
+
+        try {
+            Storage::extend('google', function ($app, $config) {
+                $options = [];
+
+                if (! empty($config['teamDriveId'] ?? null)) {
+                    $options['teamDriveId'] = $config['teamDriveId'];
+                }
+
+                $client = new \Google\Client();
+                $client->setClientId($config['clientId']);
+                $client->setClientSecret($config['clientSecret']);
+                $client->refreshToken($config['refreshToken']);
+
+                $service = new \Google\Service\Drive($client);
+                $adapter = new \Masbug\Flysystem\GoogleDriveAdapter($service, $config['folder'] ?? '/', $options);
+                $driver = new \League\Flysystem\Filesystem($adapter);
+
+                return new \Illuminate\Filesystem\FilesystemAdapter($driver, $adapter);
+            });
+        } catch (\Exception $e) {
+            // your exception handling logic
+        }
+
+        Collection::macro('paginator', function ($perPage = 15, $currentPage = null, $options = []) {
+            $currentPage = $currentPage ?: (Paginator::resolveCurrentPage() ?: 1);
+
+            return new LengthAwarePaginator(
+                $this->forPage($currentPage, $perPage),
+                $this->count(),
+                $perPage,
+                $currentPage,
+                array_merge([
+                    'path' => request()->fullUrl(),
+                    'query' => [
+                        'page' =>   request()->input('page', 1)
+                    ]
+                ], $options)
+            );
+        });
+
         /*
          * Optional methods to load your package assets
          */
         // $this->loadTranslationsFrom(__DIR__.'/../resources/lang', 'laravel-visualconsole');
-        $this->loadViewsFrom(__DIR__.'/../views', 'laravel-visualconsole');
+        $this->loadViewsFrom(__DIR__.'/views', 'laravel-visualconsole');
         // $this->loadMigrationsFrom(__DIR__.'/../database/migrations');
-        $this->loadRoutesFrom(__DIR__.'/routes.php');
-        if (file_exists($routes = base_path('routes/laravel-visualconsole/routes.php'))) {
+        $this->loadRoutesFrom(__DIR__.'/routes/route.php');
+        if (file_exists($routes = base_path('routes/visualconsole/routes.php'))) {
             $this->loadRoutesFrom($routes);
         }
 
         if ($this->app->runningInConsole()) {
             $this->publishes([
-                __DIR__.'/../config/config.php' => config_path('laravel-visualconsole.php'),
-            ], 'config');
+                __DIR__.'/config/config.php' => config_path('visualconsole.php'),
+            ], 'visualconsole-config');
 
             // Publishing the views.
             $this->publishes([
-                __DIR__.'/../resources/views' => resource_path('views/vendor/laravel-visualconsole'),
-            ], 'views');
+                __DIR__.'/views' => resource_path('views/vendor/visualconsole'),
+            ], 'visualconsole-views');
 
             // Publishing assets.
             $this->publishes([
-                __DIR__.'/routes' => app_path('routes/laravel-visualconsole'),
-            ], 'assets');
+                __DIR__.'/../assets' => public_path('visualconsole/assets'),
+            ], 'visualconsole-assets');
 
-            // Publishing the translation files.
-            /*$this->publishes([
-                __DIR__.'/../resources/lang' => resource_path('lang/vendor/laravel-visualconsole'),
-            ], 'lang');*/
-
-            // Registering package commands.
-            // Console only commands
-            $this->commands([
-                CommandConsole::class,
-            ]);
+            // Publishing routes.
+            $this->publishes([
+                __DIR__.'/routes' => base_path('routes/visualconsole'),
+            ], 'visualconsole-routes');
         }
+
+        // Registering package commands.
+        // Console only commands
+        $this->commands([
+            CommandConsole::class,
+        ]);
     }
 
     /**
@@ -78,7 +119,7 @@ class LaravelVisualConsoleServiceProvider extends ServiceProvider
     public function register()
     {
         // Automatically apply the package configuration
-        $this->mergeConfigFrom(__DIR__.'/../config/config.php', 'laravel-visualconsole');
+        $this->mergeConfigFrom(__DIR__.'/config/config.php', 'laravel-visualconsole');
 
         // Register the main class to use with the facade
         $this->app->singleton('laravel-visualconsole', function () {

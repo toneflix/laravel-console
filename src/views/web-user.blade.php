@@ -1,14 +1,17 @@
-<x-visualconsole::layout>
+<x-laravel-visualconsole::layout>
+    @php
+        $action = LaravelVisualConsole::routes(url()->current());
+    @endphp
     <x-slot name="title">
         @isset($choose)
             Choose Backup Signature
         @else
-            Command Console
+            {{ $action['label'] }}
         @endisset
     </x-slot>
     @if (isset($errors) || isset($messages) || isset($code))
         @if ($errors)
-            <x-visualconsole::alert :message="$errors->first()" color="red" />
+            <x-laravel-visualconsole::alert :message="$errors->first()" color="red" />
         @endif
         @isset($messages)
             <div class="errors m-5">{{ $messages->first() }}</div>
@@ -19,9 +22,69 @@
             @isset($choose)
                 Choose Backup Signature
             @else
-                Command Console
+                {{ $action['label'] }}
             @endisset
         </h2>
+        <div class="grid gap-6 mb-8 md:grid-cols-2 xl:grid-cols-3">
+            <!-- Card -->
+            <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                <div class="p-3 mr-4 text-green-500 bg-green-100 rounded-full dark:text-green-100 dark:bg-green-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="none" d="M0 0h24v24H0z" />
+                        <path
+                            d="M9 1v2h6V1h2v2h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4V1h2zm11 7H4v11h16V8zm-4.964 2.136l1.414 1.414-4.95 4.95-3.536-3.536L9.38 11.55l2.121 2.122 3.536-3.536z"
+                            fill="rgba(3,142,11,1)" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                        Total Jobs
+                    </p>
+                    <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                        {{ $total_jobs }}
+                    </p>
+                </div>
+            </div>
+            <!-- Card -->
+            <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                <div
+                    class="p-3 mr-4 text-orange-500 bg-orange-100 rounded-full dark:text-orange-100 dark:bg-orange-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="none" d="M0 0h24v24H0z" />
+                        <path
+                            d="M9 1v2h6V1h2v2h4a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h4V1h2zm11 7H4v11h16V8zm-4.964 2.136l1.414 1.414-4.95 4.95-3.536-3.536L9.38 11.55l2.121 2.122 3.536-3.536z"
+                            fill="rgba(254,92,0,1)" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                        Failed Jobs
+                    </p>
+                    <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                        {{ $failed_jobs }}
+                    </p>
+                </div>
+            </div>
+            <!-- Card -->
+            <div class="flex items-center p-4 bg-white rounded-lg shadow-xs dark:bg-gray-800">
+                <div class="p-3 mr-4 text-teal-500 bg-teal-100 rounded-full dark:text-teal-100 dark:bg-teal-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="none" d="M0 0h24v24H0z" />
+                        <path
+                            d="M14 10h-4v4h4v-4zm2 0v4h3v-4h-3zm-2 9v-3h-4v3h4zm2 0h3v-3h-3v3zM14 5h-4v3h4V5zm2 0v3h3V5h-3zm-8 5H5v4h3v-4zm0 9v-3H5v3h3zM8 5H5v3h3V5zM4 3h16a1 1 0 0 1 1 1v16a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1z"
+                            fill="rgba(10,116,84,1)" />
+                    </svg>
+                </div>
+                <div>
+                    <p class="mb-2 text-sm font-medium text-gray-600 dark:text-gray-400">
+                        Total Tables
+                    </p>
+                    <p class="text-lg font-semibold text-gray-700 dark:text-gray-200">
+                        {{ $tables_count }}
+                    </p>
+                </div>
+            </div>
+        </div>
         @isset($code)
             <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
                 <div
@@ -33,7 +96,7 @@
         <div class="px-4 py-3 mb-8 bg-white rounded-lg shadow-md dark:bg-gray-800">
             <label class="block mt-4 text-sm">
                 <span class="text-gray-700 dark:text-gray-400">
-                    Command Console
+                    {{ $action['label'] }}
                 </span>
                 <div class="relative text-gray-500 focus-within:text-red-600">
                     @if ($action === 'choose' || $action === 'download')
@@ -64,12 +127,12 @@
                     @endif
                 </div>
             </label>
-            <x-visualconsole::commands :commands="$commands" />
+            <x-laravel-visualconsole::commands :commands="$commands" />
         </div>
     </div>
 
     @push('bottom')
-        <x-visualconsole::modal title="Confirm Action" name="confirm" x-cloak>
+        <x-laravel-visualconsole::modal title="Confirm Action" name="confirm" x-cloak>
             Are you sure you want to perform this action? This might have very dangerous consequences.
             <x-slot name="buttons">
                 <button x-ref="confirmation" @click="location.href = $refs.confirmation.dataset.href"
@@ -77,10 +140,10 @@
                     Accept
                 </button>
             </x-slot>
-        </x-visualconsole::modal>
+        </x-laravel-visualconsole::modal>
 
         <script>
             let artisan = document.querySelector('select#artisan');
         </script>
     @endpush
-</x-visualconsole::layout>
+</x-laravel-visualconsole::layout>

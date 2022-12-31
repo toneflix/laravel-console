@@ -14,6 +14,41 @@ You can install the package via composer:
 composer require toneflix-code/laravel-visualconsole
 ```
 
+## Post Installation
+
+After installation you must publish the package assets by running:
+
+```bash
+php artisan vendor:publish --tag=visualconsole-assets
+```
+
+Optionally you can publish the configuration file by running:
+
+```bash
+php artisan vendor:publish --tag=visualconsole-config
+```
+
+You can also optionally publish the views by running:
+
+```bash
+php artisan vendor:publish --tag=visualconsole-view
+```
+
+If needed, you can also publish the routes by running:
+
+```bash
+php artisan vendor:publish --tag=visualconsole-routes
+```
+
+## Getting Google Keys
+
+#### Please follow [Google Docs](https://developers.google.com/drive/v3/web/enable-sdk) to obtain your `client ID, client secret & refresh token`.
+
+#### In addition you can also check these easy-to-follow tutorial by [@ivanvermeyen](https://github.com/ivanvermeyen/laravel-google-drive-demo)
+
+-   [Getting your Client ID and Secret](https://github.com/ivanvermeyen/laravel-google-drive-demo/blob/master/README/1-getting-your-dlient-id-and-secret.md)
+-   [Getting your Refresh Token](https://github.com/ivanvermeyen/laravel-google-drive-demo/blob/master/README/2-getting-your-refresh-token.md)
+
 ## Usage
 
 ```php

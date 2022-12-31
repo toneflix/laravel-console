@@ -48,15 +48,29 @@ function data () {
             this.isPagesMenuOpen = !this.isPagesMenuOpen
         },
         // Modal
+        exceptionData: {},
+        stackTrace: {},
         isModalOpen: {},
         trapCleanup: null,
-        openModal (modalName) {
+        openModal (modalName, data = {}) {
+            if (data.exception) {
+                this.exceptionData = data.exception
+            }
+            if (data.stackData) {
+                this.stackTrace = data.stackData
+            }
             this.isModalOpen[modalName] = true
             this.trapCleanup = focusTrap(document.querySelector('#modal' + modalName))
         },
         closeModal (modalName) {
             this.isModalOpen[modalName] = false
             this.trapCleanup()
+            if (this.exceptionData) {
+                this.exceptionData = {}
+            }
+            if (this.stackTrace) {
+                this.stackTrace = {}
+            }
         },
         confirm: {},
         run (link, confirmation, actions) {

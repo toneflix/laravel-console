@@ -15,7 +15,7 @@ class Authenticate extends Middleware
     protected function redirectTo($request)
     {
         if (! $request->expectsJson()) {
-            return redirect(route('laravel-visualconsole.login'));
+            return route(config('laravel-visualconsole.route_prefix', 'lvc').'.console.login');
         }
     }
 }

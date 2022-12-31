@@ -41,7 +41,7 @@
         <footer
             class="flex flex-col items-center justify-end px-6 py-3 -mx-6 -mb-4 space-y-4 sm:space-y-0 sm:space-x-6 sm:flex-row bg-gray-50 dark:bg-gray-800">
             <button @click="closeModal('{{ $name }}')"
-                class="w-full px-5 py-3 text-sm font-medium leading-5 text-white text-red-700 transition-colors duration-150 border border-red-300 rounded-lg dark:text-red-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent hover:border-red-500 focus:border-red-500 active:text-red-500 focus:outline-none focus:shadow-outline-red">
+                class="w-full px-5 py-3 text-sm font-medium leading-5 text-white text-red-700 transition-colors duration-150 border border-red-300 rounded-lg dark:text-red-400 sm:px-4 sm:py-2 sm:w-auto active:bg-transparent bg-red-100 text-red-500 hover:border-red-500 focus:border-red-500 active:text-red-500 focus:outline-none focus:shadow-outline-red">
                 Cancel
             </button>
             @isset($buttons)
