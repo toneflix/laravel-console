@@ -85,7 +85,8 @@ If you discover any security-related issues, please email code@toneflix.com.ng i
 
 ## Credits
 
--   [Toneflix Code](https://github.com/toneflix-code)
+-   [Toneflix Code](https://github.com/toneflix)
+-   [Legacy](https://github.com/3m1n3nc3)
 -   [All Contributors](../../contributors)
 
 ## License
