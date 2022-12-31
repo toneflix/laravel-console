@@ -42,7 +42,9 @@ php artisan vendor:publish --tag=visualconsole-routes
 
 ## Getting Google Keys
 
-#### Please follow [Google Docs](https://developers.google.com/drive/v3/web/enable-sdk) to obtain your `client ID, client secret & refresh token`.
+This package depends on google drive for backup storage, although you can use any storage your spp is configured to run with.
+
+#### Please follow [Google Docs](https://developers.google.com/drive/v3/web/enable-sdk) to obtain your `client ID, client secret & refresh token` which is required to get the system running.
 
 #### In addition you can also check these easy-to-follow tutorial by [@ivanvermeyen](https://github.com/ivanvermeyen/laravel-google-drive-demo)
 
@@ -51,9 +53,15 @@ php artisan vendor:publish --tag=visualconsole-routes
 
 ## Usage
 
-```php
-// Usage description here
-```
+After installation, the package is ready to use, simply point your browser to http://youdomainexample.com/system/console/login.
+
+The default setup is configured to work with your current authentication model.
+
+### Authorization
+
+By defautlt the package will check the `privileges` field of the current authentication model `[User]` for if the the authenticating user has the `admin` Privilege assuming the value of the field is a numeric list of attribute/privileges, if it fails to confirm it checks if the value of the field is exactly `admin`, once confirmed the user is authenticated.
+
+If you which to change the behavior you should check the [Post Installation](post-installation) section for how to publish the config and modify the suite your requirements, you can also set the `permission_field` and `permission_value` config values to `null` in order to disable this behaviour. The implicatio of disabling the feature is that anyone with login access can also access the visual console.
 
 ### Testing
 
@@ -81,7 +89,3 @@ If you discover any security related issues, please email code@toneflix.com.ng i
 ## License
 
 The MIT License (MIT). Please see [License File](LICENSE.md) for more information.
-
-## Laravel Package Boilerplate
-
-This package was generated using the [Laravel Package Boilerplate](https://laravelpackageboilerplate.com).
