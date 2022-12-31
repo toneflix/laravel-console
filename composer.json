@@ -21,7 +21,6 @@
         "illuminate/filesystem": "^8.0|^9.0",
         "masbug/flysystem-google-drive-ext": "^2.2",
         "spatie/laravel-slack-alerts": "^1.1",
-        "madnest/madzipper": "^1.3",
         "rap2hpoutre/laravel-log-viewer": "^2.2",
         "msztorc/laravel-env": "^1.2"
     },
