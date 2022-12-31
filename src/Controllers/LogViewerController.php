@@ -108,7 +108,7 @@ class LogViewerController extends BaseController
         });
 
         $data = [
-            'logs' => $paginated->paginator(3),
+            'logs' => $paginated->paginator(30),
             'folders' => $this->log_viewer->getFolders(),
             'current_folder' => $this->log_viewer->getFolderName(),
             'folder_files' => $folderFiles,
