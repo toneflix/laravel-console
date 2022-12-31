@@ -29,3 +29,11 @@ All notable changes to `laravel-visualconsole` will be documented in this file
 
 -   Fixed all known bugs
 -   Resolve missing dependencies
+
+## 0.0.6 - 2022-08-04
+
+-   Fixed all known bugs
+-   Improve error log presentation
+-   Add messages to show when logs or queues are empty
+-   Add subtitle to error log level info
+-   Use lists for error log side bar
