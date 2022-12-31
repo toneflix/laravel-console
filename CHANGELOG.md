@@ -24,3 +24,8 @@ All notable changes to `laravel-visualconsole` will be documented in this file
 -   Add error monitoring
 -   Add failed job monitoring
 -   Add scheduled task monitoring
+
+## 0.0.2 - 2022-08-04
+
+-   Fixed all known bugs
+-   Resolve missing dependencies
