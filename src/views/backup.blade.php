@@ -40,31 +40,33 @@
             </div>
         @endisset
         <!-- component -->
-        <div
-            class="flex flex-col space-y-4 animated fadeIn faster justify-center w-1/2 inset-0 z-50 outline-none focus:outline-none my-5 h-72 overflow-auto">
-            @foreach ($backups as $backup)
-                <div
-                    class="flex flex-col p-2 bg-white shadow-md hover:shodow-lg rounded-2xl {{ $loop->first == 0 ? 'mt-20' : '' }}">
-                    <div class="flex items-center justify-between">
-                        <div class="flex items-center">
-                            <svg xmlns="http://www.w3.org/2000/svg"
-                                class="w-10 h-10 rounded-2xl p-3 border border-blue-100 text-blue-400 bg-blue-50"
-                                fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                            </svg>
-                            <div class="flex flex-col ml-3">
-                                <div class="font-medium leading-none">{{ $backup }}</div>
-                                <p class="text-sm text-gray-600 leading-none mt-1">Availabel for download
-                                </p>
+        @if ($backups->count())
+            <div
+                class="flex flex-col space-y-4 animated fadeIn faster justify-center w-1/2 inset-0 z-50 outline-none focus:outline-none my-5 h-72 overflow-auto">
+                @foreach ($backups as $backup)
+                    <div
+                        class="flex flex-col p-2 bg-white shadow-md hover:shodow-lg rounded-2xl {{ $loop->first == 0 ? 'mt-20' : '' }}">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg"
+                                    class="w-10 h-10 rounded-2xl p-3 border border-blue-100 text-blue-400 bg-blue-50"
+                                    fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                        d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                                </svg>
+                                <div class="flex flex-col ml-3">
+                                    <div class="font-medium leading-none">{{ $backup }}</div>
+                                    <p class="text-sm text-gray-600 leading-none mt-1">Availabel for download
+                                    </p>
+                                </div>
                             </div>
+                            <a href="{{ route(config('laravel-visualconsole.route_prefix', 'system') . '.secure.download', $backup) }}"
+                                class="flex-no-shrink bg-red-500 px-5 ml-4 py-2 text-sm shadow-sm hover:shadow-lg font-medium tracking-wider border-2 border-red-500 text-white rounded-full">Download</a>
                         </div>
-                        <a href="{{ route(config('laravel-visualconsole.route_prefix', 'system') . '.secure.download', $backup) }}"
-                            class="flex-no-shrink bg-red-500 px-5 ml-4 py-2 text-sm shadow-sm hover:shadow-lg font-medium tracking-wider border-2 border-red-500 text-white rounded-full">Download</a>
                     </div>
-                </div>
-            @endforeach
-        </div>
+                @endforeach
+            </div>
+        @endif
 
         @if (config('laravel-visualconsole.backup_disk', 'google') === 'google')
             <form method="post"

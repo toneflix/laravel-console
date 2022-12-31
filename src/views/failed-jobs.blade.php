@@ -101,7 +101,7 @@
                         </tr>
                     </thead>
                     <tbody class="bg-white divide-y dark:divide-gray-700 dark:bg-gray-800">
-                        @foreach ($jobs->items() as $key => $job)
+                        @forelse ($jobs->items() as $key => $job)
                             @php
                                 $exception = collect($job->exception ?? null)->toJson();
                             @endphp
@@ -161,7 +161,16 @@
                                     </td>
                                 @endif
                             </tr>
-                        @endforeach
+                        @empty
+                            <tr class="text-gray-700 dark:text-gray-400">
+                                <td colspan="5" class="px-4 py-3">
+                                    <div
+                                        class="mb-5 px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800 w-full h-20 flex items-center justify-center">
+                                        There are no {{ $action['label'] }}.
+                                    </div>
+                                </td>
+                            </tr>
+                        @endforelse
                     </tbody>
                 </table>
             </div>
@@ -191,7 +200,8 @@
                                 x-transition:enter-end="opacity-100 scale-y-100"
                                 x-transition:leave="transition ease-in duration-300"
                                 x-transition:leave-start="opacity-100 scale-y-100"
-                                x-transition:leave-end="opacity-0 scale-y-90" x-show="show[i]" x-html="data.toString()">
+                                x-transition:leave-end="opacity-0 scale-y-90" x-show="show[i]"
+                                x-html="data.toString()">
                             </div>
                         </div>
                     </template>

@@ -25,32 +25,36 @@
         <!-- New Table -->
         <div class="grid grid-cols-1 md:grid-cols-4 gap-2">
             <div class="col-span-1">
-
-                <div class="list-group div-scroll">
-                    @foreach ($folders as $folder)
-                        <div class="flex items-center p-2 bg-gray-200 shadow-xs dark:bg-white"">
-                            <?php
-                            \Rap2hpoutre\LaravelLogViewer\LaravelLogViewer::DirectoryTreeStructure($storage_path, $structure);
-                            ?>
+                <div class="flex justify-center">
+                    @if (count($folders) || count($files))
+                        <div class="bg-white rounded-lg border border-gray-200 w-96 text-gray-900">
+                            @foreach ($folders as $folder)
+                                <button aria-current="true" type="button"
+                                    class="block px-6 py-2 border-b border-gray-200 w-full{{ $loop->first ? ' rounded-t-lg ' : '' }}{{ $loop->last && !count($files) ? ' rounded-b-lg ' : '' }} bg-blue-600 text-white cursor-pointer">
+                                    <?php
+                                    \Rap2hpoutre\LaravelLogViewer\LaravelLogViewer::DirectoryTreeStructure($storage_path, $structure);
+                                    ?>
+                                </button>
+                            @endforeach
+                            @foreach ($files as $file)
+                                <a href="?l={{ \Illuminate\Support\Facades\Crypt::encrypt($file) }}" aria-current="true"
+                                    class="block px-6 py-2 border-b border-gray-200 w-full{{ $loop->first && !count($folders) ? ' rounded-t-lg ' : '' }}{{ $loop->last ? ' rounded-b-lg ' : '' }} {{ $current_file == $file ? 'bg-blue-600 text-white' : 'text-gray-600 focus:outline-none focus:ring-0 focus:bg-gray-200 focus:text-gray-600 transition duration-500 hover:bg-gray-100 hover:text-gray-500' }}  cursor-pointer">
+                                    {{ $file }}
+                                </a>
+                            @endforeach
                         </div>
-                    @endforeach
-                    @foreach ($files as $file)
-                        <a href="?l={{ \Illuminate\Support\Facades\Crypt::encrypt($file) }}"
-                            class="flex items-center p-2 bg-{{ $current_file == $file ? 'white' : 'gray-200' }}  shadow-xs dark:bg-{{ $current_file == $file ? 'gray-500' : 'white' }}">
-                            {{ $file }}
-                        </a>
-                    @endforeach
+                    @else
+                        <div
+                            class="mb-5 px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800 w-full h-20 flex items-center justify-center">
+                            No log files found.
+                        </div>
+                    @endif
                 </div>
             </div>
             <div class="col-span-3">
-                <div class="w-full overflow-hidden rounded-lg shadow-xs">
-                    <div class="w-full overflow-x-auto">
-                        @if ($logs->count() < 1)
-                            <div
-                                class="mb-5 px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800 w-full h-20 flex items-center justify-center">
-                                Log file >50M, please download it.
-                            </div>
-                        @else
+                @if ($logs->count())
+                    <div class="w-full overflow-hidden rounded-lg shadow-xs">
+                        <div class="w-full overflow-x-auto">
                             <table class="w-full whitespace-no-wrap">
                                 <thead>
                                     <tr
@@ -90,9 +94,10 @@
                                                             </div>
                                                         </div>
                                                         <div>
-                                                            <p class="font-semibold uppercase">{{ $log['level'] }}</p>
+                                                            <p class="font-semibold uppercase">{{ $log['level'] }}
+                                                            </p>
                                                             <p class="text-xs text-gray-600 dark:text-gray-400">
-                                                                10x Developer
+                                                                {{ str($log['summary'] ?? null)->limit(20) }}
                                                             </p>
                                                         </div>
                                                     </div>
@@ -132,9 +137,14 @@
                                     @endforeach
                                 </tbody>
                             </table>
-                        @endif
+                        </div>
                     </div>
-                </div>
+                @else
+                    <div
+                        class="mb-5 px-4 py-3 text-xs font-semibold tracking-wide text-gray-500 uppercase border dark:border-gray-700 bg-gray-50 dark:text-gray-400 dark:bg-gray-800 w-full h-20 flex items-center justify-center">
+                        {{ $current_file ? 'Log file >50M, please download it.' : 'Log is empty...' }}
+                    </div>
+                @endif
                 <!-- Pagination -->
                 {{ $logs->onEachSide(0)->links('laravel-visualconsole::pagination.tailwind') }}
                 <div class="p-3">
