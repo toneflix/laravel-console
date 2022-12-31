@@ -62,7 +62,7 @@ The default setup is configured to work with your current authentication model.
 
 By defautlt the package will check the `privileges` field of the current authentication model `[User]` for if the the authenticating user has the `admin` Privilege assuming the value of the field is a numeric list of attribute/privileges, if it fails to confirm it checks if the value of the field is exactly `admin`, once confirmed the user is authenticated.
 
-If you which to change the behavior you should check the [Post Installation](post-installation) section for how to publish the config and modify the suite your requirements, you can also set the `permission_field` and `permission_value` config values to `null` in order to disable this behaviour. The implicatio of disabling the feature is that anyone with login access can also access the visual console.
+If you which to change the behavior you should check the [Post Installation](#post-installation) section for how to publish the config and modify the suite your requirements, you can also set the `permission_field` and `permission_value` config values to `null` in order to disable this behaviour. The implicatio of disabling the feature is that anyone with login access can also access the visual console.
 
 ### Testing
 
