@@ -63,4 +63,4 @@ Route::prefix(config('laravel-visualconsole.route_prefix', 'system'))
 
 Route::get('visualconsole/assets/{file}', function ($file) {
     return (new LaravelVisualConsole)->assetFile($file);
-})->name('lvsc.in.asset.file');
+})->name('system.in.asset.file');
