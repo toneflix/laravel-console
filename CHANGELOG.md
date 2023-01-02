@@ -15,7 +15,7 @@ All notable changes to `laravel-visualconsole` will be documented in this file
 -   Fixed all known bugs
 -   Added Reset and backup
 
-## 0.0.4 - 2022-08-04
+## 0.0.4 - 2022-12-31
 
 -   Fixed all known bugs
 -   Completed the ui
@@ -25,15 +25,27 @@ All notable changes to `laravel-visualconsole` will be documented in this file
 -   Add failed job monitoring
 -   Add scheduled task monitoring
 
-## 0.0.5 - 2022-08-04
+## 0.0.5 - 2022-12-31
 
 -   Fixed all known bugs
 -   Resolve missing dependencies
 
-## 0.0.6 - 2022-08-04
+## 0.0.6 - 2022-12-31
 
 -   Fixed all known bugs
 -   Improve error log presentation
 -   Add messages to show when logs or queues are empty
 -   Add subtitle to error log level info
 -   Use lists for error log side bar
+
+## 0.0.7 - 2023-01-02
+
+-   Fixed all known bugs
+-   Added the git automation endpoint
+
+## 0.0.8 - 2023-01-02
+
+-   Fixed all known bugs
+-   Added the artisan webhook route
+-   Added the webhook secret configuration
+-   Allow to use custom PHP version for composer tasks

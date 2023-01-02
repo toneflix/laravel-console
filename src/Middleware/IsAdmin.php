@@ -18,7 +18,7 @@ class IsAdmin
     public function handle(Request $request, Closure $next)
     {
         $user = Auth::user();
-
+        
         if (is_array($roles = $user[config('laravel-visualconsole.permission_field')]) &&
             in_array(config('laravel-visualconsole.permission_value'), $roles)) {
             return $next($request);

@@ -16,6 +16,7 @@ class AutoDeploy extends Command
      * @var string
      */
     protected $signature = 'system:git-deploy
+                            {--mock-php : Mock the php binary from the config file}
                             {--branch= : The branch to deploy}
                             {--force : Force the deployment}
                             {--dev : Run in development mode (This will prevent composer from removing dev dependencies)}
@@ -106,13 +107,23 @@ class AutoDeploy extends Command
 
         // Run composer
         $this->info('Running composer...');
-        $cmd = $this->option('dev') ? 'composer install' : 'composer install --no-dev';
-        $cmd .= ' | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2};?)?)?[mGK]//g"';
+        $compose = '';
+        if ($this->option('mock-php')) {
+            $compose .= file_exists(config('laravel-visualconsole.php_bin'))
+                ? config('laravel-visualconsole.php_bin')
+                : PHP_BINARY;
+            $compose .= ' ' . exec('which composer');
+        } else {
+            $compose .= 'composer';
+        }
+
+        $compose .= $this->option('dev') ? ' install' : ' install --no-dev';
+        $compose .= ' --ignore-platform-reqs | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2};?)?)?[mGK]//g"';
         unset($output);
 
-        $res = exec($cmd, $output, $retval);
+        $res = exec($compose, $output, $retval);
 
-        $this->writeOutputToFile([$cmd, ...$output], $res);
+        $this->writeOutputToFile([$compose, ...$output], $res);
         if ($retval) {
             $this->error('There was an error running composer.');
             return Command::FAILURE;
@@ -121,7 +132,11 @@ class AutoDeploy extends Command
         // Run migrations
         $this->info('Running migrations...');
         unset($output);
-        $res = exec('php '. base_path('/artisan') . ' migrate', $output, $retval);
+        $php = file_exists(base_path(config('laravel-visualconsole.php_bin')))
+            ? base_path(config('laravel-visualconsole.php_bin'))
+            : PHP_BINARY;
+
+        $res = exec($php . ' '. base_path('/artisan') . ' migrate', $output, $retval);
         $this->writeOutputToFile(["php artisan migrate", ...$output], $res);
         if ($retval) {
             $this->error('There was an error running migrations.');

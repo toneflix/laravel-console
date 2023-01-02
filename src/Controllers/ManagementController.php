@@ -183,7 +183,7 @@ class ManagementController extends Controller
         ));
     }
 
-    public function artisan(Response $response, $command, $params = null)
+    public function artisan(Response $response, Request $request, $command, $params = null)
     {
         $errors = $code = $messages = $action = null;
         try {
@@ -196,6 +196,29 @@ class ManagementController extends Controller
             $errors = collect([$e->getMessage()]);
         }
 
+        if (request()->route()->named(config('laravel-visualconsole.route_prefix', 'system') . '.artisan.webhook')) {
+
+            $signature = $request->header(
+                'X-Hub-Signature',
+                $request->input('X-Hub-Signature'),
+                $request->header(
+                    'X-Signature',
+                    $request->input('X-Signature')
+                )
+            );
+
+            return $response->setContent([
+                'data' => [
+                    // 'signature' => $signature,
+                    'code' => str($code)->replace(['<br />', '<br/>', '<br \/>', '<br\/>'], PHP_EOL),
+                ],
+                'errors' => $errors,
+                'message' => __('Command executed successfully'),
+                'status' => 'success',
+                'status_code' => HttpStatus::OK,
+            ]);
+        }
+
         return back()->with(compact('errors', 'code', 'action'))->withInput();
     }
 
@@ -205,7 +228,7 @@ class ManagementController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Request $request)
+    public function destroy(Request $request, Response $response)
     {
         $request->user()->tokens()->delete();
 
@@ -215,7 +238,7 @@ class ManagementController extends Controller
             return response()->redirectToRoute(config('laravel-visualconsole.route_prefix', 'system') . '.console.login');
         }
 
-        return $this->buildResponse([
+        return $response->setContent([
             'message' => __('You are now logged out'),
             'status' => 'success',
             'status_code' => HttpStatus::OK,

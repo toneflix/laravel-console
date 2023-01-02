@@ -43,4 +43,14 @@ return [
     'slack_webhook_urls' => [
         'default' => env('SLACK_ALERT_WEBHOOK'),
     ],
+
+    /**
+     * The secret token that will be used to authenticate the webhook.
+     */
+    'webhook_secret' => env('VISUALCONSOLE_WEBHOOK_SECRET'),
+
+    /**
+     * The path to the php binary on your server.
+     */
+    'php_bin' => env('PHP_BINARY', 'php'),
 ];

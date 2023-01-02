@@ -8,6 +8,7 @@ use ToneflixCode\LaravelVisualConsole\Controllers\LogViewerController;
 use ToneflixCode\LaravelVisualConsole\Controllers\ManagementController;
 use ToneflixCode\LaravelVisualConsole\LaravelVisualConsole;
 use ToneflixCode\LaravelVisualConsole\Middleware\IsAdmin;
+use ToneflixCode\LaravelVisualConsole\Middleware\SecretToken;
 
 Route::prefix(config('laravel-visualconsole.route_prefix', 'system'))
      ->name(config('laravel-visualconsole.route_prefix', 'system') . '.')->group(function () {
@@ -40,11 +41,14 @@ Route::prefix(config('laravel-visualconsole.route_prefix', 'system'))
             ->name('controls');
     });
 
+    Route::get('/webhooks/artisan/{command}/{params?}', [ManagementController::class, 'artisan'])
+        ->middleware([SecretToken::class])->name('artisan.webhook');
+
     Route::get('/artisan/backup/action/{action?}', [ManagementController::class, 'backup'])
          ->middleware(['web', Authenticate::class, IsAdmin::class])->name('backup');
 
     Route::get('/artisan/{command}/{params?}', [ManagementController::class, 'artisan'])
-         ->middleware(['web', Authenticate::class, IsAdmin::class])->name('artisan');
+        ->middleware(['web', Authenticate::class, IsAdmin::class])->name('artisan');
 
     Route::get('downloads/secure/{filename?}', function ($filename = '') {
         if (Storage::disk('protected')->exists('backup/'.$filename)) {

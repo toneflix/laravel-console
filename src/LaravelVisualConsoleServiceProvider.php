@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
 use ToneflixCode\LaravelVisualConsole\Commands\AutoDeploy;
 use ToneflixCode\LaravelVisualConsole\Commands\CommandConsole;
+use ToneflixCode\LaravelVisualConsole\Commands\KeyGen;
 
 class LaravelVisualConsoleServiceProvider extends ServiceProvider
 {
@@ -112,6 +113,7 @@ class LaravelVisualConsoleServiceProvider extends ServiceProvider
         $this->commands([
             CommandConsole::class,
             AutoDeploy::class,
+            KeyGen::class,
         ]);
     }
 

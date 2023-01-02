@@ -78,6 +78,7 @@ The library also exposes a few custom Artisan commands to help you with certain 
         2. `--force`: Force the deployment.
         3. `--dev`: Run in development mode (This will prevent composer from removing dev dependencies)
         4. `--log-level=2`: How log the output should handled. `0` = none, `1` = console only, `2` = file and console.
+        5. `--mock-php`: If your server is on a shared hosting which uses a different version on the CLI less that php 8.1, this option allows you to use a different version of php of your choice, publish the [config file](#post-installation) and update the `php_bin` option or set `PHP_BINARY` option on your .env file (Make sure the path is an abosolute path to your prefered php biinary).
 
     Example:
 
@@ -105,6 +106,20 @@ The library also exposes a few custom Artisan commands to help you with certain 
     ```php
     php artisan system:control backup --w|wizard
     ```
+
+3. `system:key-gen`: Generate a webhook secret key for the application, you can use this key for authorizing github or any other services where you need access tho the artisan webhook interface.
+
+    Example:
+
+    ```php
+    php artisan system:key-gen
+    ```
+
+### Artisan Webhook Interface
+
+The Artisan Webhook Interface allows you to remotely run any of the given artisan commands listed above where user authentication is not possible.
+The interface can be accessed like this: `http://youdomainexample.com/system/webhooks/artisan/[command [--param1] [--param2]]`.
+When accessing this endpoint, you will have to pass the HMAC hex digest of the request body, generated using the SHA-1 or SHA-256 hash function and the secret as the HMAC key through the `X-Hub-Signature` header for Github or the `X-Signature` for other services, provided for convinience purpose.
 
 ### Testing
 
