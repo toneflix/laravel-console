@@ -41,7 +41,7 @@ Route::prefix(config('laravel-visualconsole.route_prefix', 'system'))
             ->name('controls');
     });
 
-    Route::get('/webhooks/artisan/{command}/{params?}', [ManagementController::class, 'artisan'])
+    Route::match(['GET', 'POST'], '/webhooks/artisan/{command}/{params?}', [ManagementController::class, 'artisan'])
         ->middleware([SecretToken::class])->name('artisan.webhook');
 
     Route::get('/artisan/backup/action/{action?}', [ManagementController::class, 'backup'])
