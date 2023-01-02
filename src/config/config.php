@@ -52,5 +52,10 @@ return [
     /**
      * The path to the php binary on your server.
      */
-    'php_bin' => env('PHP_BINARY', 'php'),
+    'php_bin' => env('VISUALCONSOLE_PHP_BINARY', 'php'),
+
+    /**
+     * The path to the composer binary on your server.
+     */
+    'composer' => env('VISUALCONSOLE_COMPOSER', 'composer'),
 ];

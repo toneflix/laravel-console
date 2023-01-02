@@ -112,7 +112,11 @@ class AutoDeploy extends Command
             $compose .= file_exists(config('laravel-visualconsole.php_bin'))
                 ? config('laravel-visualconsole.php_bin')
                 : PHP_BINARY;
-            $compose .= ' ' . exec('which composer');
+
+            $compose .=  ' ';
+            $compose .=  file_exists(config('laravel-visualconsole.composer'))
+                ? config('laravel-visualconsole.composer')
+                : exec('which composer');
         } else {
             $compose .= 'composer';
         }
