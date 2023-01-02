@@ -22,6 +22,7 @@ class ManagementController extends Controller
         ['warn' => false, 'command' => 'artisan/storage:link', 'label' => 'Sym Link Storage'],
         ['warn' => false, 'command' => 'artisan/queue:work', 'label' => 'Run Queues'],
         ['warn' => false, 'command' => 'artisan/queue:retry all', 'label' => 'Retry All Failed Jobs'],
+        ['warn' => false, 'command' => 'artisan/storage:link', 'label' => 'Sym Link Storage'],
         ['warn' => false, 'command' => 'artisan/migrate', 'label' => 'Migrate Database'],
         ['warn' => true, 'command' => 'artisan/db:seed', 'label' => 'Seed Database'],
         ['warn' => false, 'command' => 'artisan/db:seed HomeDataSeeder', 'label' => 'Seed Homepage'],
