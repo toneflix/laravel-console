@@ -9,8 +9,8 @@ use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Queue;
 use InvalidArgumentException;
+use LogicException;
 use Symfony\Component\Console\Exception\CommandNotFoundException;
 use Symfony\Component\Console\Exception\RuntimeException;
 use ToneflixCode\LaravelVisualConsole\LaravelVisualConsole;
@@ -21,6 +21,7 @@ class ManagementController extends Controller
         ['warn' => false, 'command' => 'artisan/list', 'label' => 'Help and Info'],
         ['warn' => false, 'command' => 'artisan/storage:link', 'label' => 'Sym Link Storage'],
         ['warn' => false, 'command' => 'artisan/queue:work', 'label' => 'Run Queues'],
+        ['warn' => false, 'command' => 'artisan/queue:retry all', 'label' => 'Retry All Failed Jobs'],
         ['warn' => false, 'command' => 'artisan/migrate', 'label' => 'Migrate Database'],
         ['warn' => true, 'command' => 'artisan/db:seed', 'label' => 'Seed Database'],
         ['warn' => false, 'command' => 'artisan/db:seed HomeDataSeeder', 'label' => 'Seed Homepage'],
@@ -37,7 +38,9 @@ class ManagementController extends Controller
         ['warn' => null, 'command' => 'artisan/system:control reset', 'label' => 'System Reset (No Backup)'],
         ['warn' => null, 'command' => 'artisan/system:control reset -r', 'label' => 'System Reset (Restore Last Backup)'],
         ['warn' => null, 'command' => 'artisan/system:control restore', 'label' => 'System Restore (Last Backup)'],
-        ['warn' => false, 'command' => 'artisan/system:automate', 'label' => 'Run Automation'],
+        ['warn' => false, 'command' => 'artisan/system:automate', 'label' => 'System Automation'],
+        ['warn' => true, 'command' => 'artisan/system:git-deploy', 'label' => 'Auto Deploy (Prod.)'],
+        ['warn' => false, 'command' => 'artisan/system:git-deploy --dev', 'label' => 'Auto Deploy (Dev)'],
     ];
 
     public function index()
@@ -188,7 +191,7 @@ class ManagementController extends Controller
             }
             Artisan::call(implode(' ', explode(',', $command)), []);
             $code = collect(nl2br(Artisan::output()));
-        } catch (CommandNotFoundException | InvalidArgumentException | RuntimeException $e) {
+        } catch (CommandNotFoundException | InvalidArgumentException | RuntimeException | LogicException $e) {
             $errors = collect([$e->getMessage()]);
         }
 

@@ -16,7 +16,7 @@ class CommandConsole extends Command
      */
     protected $signature = 'system:control
                             {action? : Action to perform [reset, backup, restore]}
-                            {--w|wizard : Let the wizard help you manage the procedure.}
+                            {--w|wizard : Let the wizard guide you through the whole process.}
                             {--r|restore : Restore the system to the last backup or provide the --signature option to restore a known backup signature.}
                             {--s|signature= : Set the backup signature value to restore a particular known backup. E.g. 2022-04-26_16-05-34.}
                             {--b|backup : Do a complete system backup before the reset.}
@@ -28,7 +28,7 @@ class CommandConsole extends Command
      *
      * @var string
      */
-    protected $description = 'Handle system backup, restore and reset functions.';
+    protected $description = 'Helps you perforom common system tasks like backup, backup restore and system reset.';
 
     /**
      * Execute the console command.

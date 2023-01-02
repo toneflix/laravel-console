@@ -196,7 +196,8 @@
                         <div class="flex flex-col mb-2">
                             <button
                                 class="text-xs p-1 font-semibold bg-gray-100 text-gray-700 dark:text-gray-300 cursor-pointer"
-                                x-html="data.toString().substring(45, 120)" @click="show[i] = !show[i]">
+                                x-html="data.toString().substring(0, 65).replace('{{ storage_path() }}', '').replace(/\.[A-z0-9].*/,'')"
+                                @click="show[i] = !show[i]">
                             </button>
                             <div class="text-xs p-3 text-gray-700 dark:text-gray-400 border-x-2 border-b-2"
                                 x-transition:enter="transition ease-out duration-300"

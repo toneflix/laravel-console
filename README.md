@@ -65,6 +65,47 @@ By default, the package will check the `privileges` field of the current authent
 
 If you which to change the behaviour you should check the [Post Installation](#post-installation) section for how to publish the config and modify it to suit your requirements, you can also set the `permission_field` and `permission_value` config values to `null` in order to disable this behaviour. Disabling the feature implies that anyone with log in access can also access the visual console.
 
+### Custom Commands
+
+The library also exposes a few custom Artisan commands to help you with certain everyday tasks, even though these commandsa are accessible through the UI, they are still Artisan commands and are as much accessible through your terminal.
+
+1. `system:git-deploy`: Automatically deploys the latest code from the git repository associated with your project.
+   Before you run this command, make sure you have set up a git repository and have added a remote named "origin".
+
+    - ARGUMENTS
+
+        1. `--branch=`: The branch to deploy, the default is `main`.
+        2. `--force`: Force the deployment.
+        3. `--dev`: Run in development mode (This will prevent composer from removing dev dependencies)
+        4. `--log-level=2`: How log the output should handled. `0` = none, `1` = console only, `2` = file and console.
+
+    Example:
+
+    ```php
+    php artisan system:git-deploy --branch=main
+    ```
+
+2. `system:control`: Helps you perforom common system tasks like backup, backup restore and system reset.
+
+    - PARAMETERS
+
+        1. `action` The specific action to carryout [reset, backup, restore]
+
+    - ARGUMENTS
+
+    1. `--w|wizard`: Let the wizard guide you through the whole process.
+    2. `--r|restore`: Restore the system to the last backup or provide the `--signature` option to restore to a known backup signature.
+    3. `--s|signature=`: Set the backup signature value to restore a particular known backup. E.g. `2022-04-26_16-05-34`.
+    4. `--b|backup`: During system reset, do a complete system backup before the reset.
+    5. `--d|delete`: If the restore option is set, this option will delete the backup files after successfull a restore.
+    6. `--f|force`: Force the action to execute.
+
+    Example:
+
+    ```php
+    php artisan system:control backup --w|wizard
+    ```
+
 ### Testing
 
 ```bash
@@ -85,8 +126,7 @@ If you discover any security-related issues, please email code@toneflix.com.ng i
 
 ## Credits
 
--   [Toneflix Code](https://github.com/toneflix)
--   [Legacy](https://github.com/3m1n3nc3)
+-   [Toneflix Code](https://github.com/toneflix-code)
 -   [All Contributors](../../contributors)
 
 ## License

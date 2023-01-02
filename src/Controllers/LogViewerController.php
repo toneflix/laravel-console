@@ -94,18 +94,28 @@ class LogViewerController extends BaseController
             $stack = explode('[stacktrace]', $log['stack']);
             trim($stack[1]??'');
             $log['stack'] = explode('#', trim($stack[1]??''));
+            $log['stack'] = collect($log['stack'])->map(function ($line) {
+                // Remove Excess whitespace and if there are a succession of more than 3 dots, replace them with a single dot
+                $line = preg_replace('/\.{2,}/', '.', $line);
+                $line = preg_replace('/\s+/', ' ', $line);
+
+                return trim($line);
+            })->filter(function ($line) {
+                return !empty($line);
+            })->toArray();
+
             $log['level_class'] = $this->levels_classes[$log['level']??0] ?? 'blue';
             $log['level_img'] = 'ri-'.($this->levels_imgs[$log['level']??0]??'information').'-fill';
             $summary = [];
             $summary[] = str($log['text']??'')->afterLast('/')->trim(')(')->toString();
             $summary[] = str($log['text']??'')->before('{')->trim(' ')->toString();
-            $log['summary'] = collect($summary)->filter(function ($item) {
-                return !empty($item);
-            })->implode(': ');
-            array_shift($log['stack']);
-            array_pop($log['stack']);
-            return $log;
-        });
+                $log['summary'] = collect($summary)->filter(function ($item) {
+                    return !empty($item);
+                })->implode(': ');
+                array_shift($log['stack']);
+                array_pop($log['stack']);
+                return $log;
+            });
 
         $data = [
             'logs' => $paginated->paginator(30),

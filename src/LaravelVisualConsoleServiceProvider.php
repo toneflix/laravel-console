@@ -9,6 +9,7 @@ use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Blade;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\ServiceProvider;
+use ToneflixCode\LaravelVisualConsole\Commands\AutoDeploy;
 use ToneflixCode\LaravelVisualConsole\Commands\CommandConsole;
 
 class LaravelVisualConsoleServiceProvider extends ServiceProvider
@@ -110,6 +111,7 @@ class LaravelVisualConsoleServiceProvider extends ServiceProvider
         // Console only commands
         $this->commands([
             CommandConsole::class,
+            AutoDeploy::class,
         ]);
     }
 

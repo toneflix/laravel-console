@@ -133,7 +133,7 @@
 
     @push('bottom')
         <x-laravel-visualconsole::modal title="Confirm Action" name="confirm" x-cloak>
-            Are you sure you want to perform this action? This might have very dangerous consequences.
+            Are you sure you want to perform this action? <span x-html="modalMessage"></span>
             <x-slot name="buttons">
                 <button x-ref="confirmation" @click="location.href = $refs.confirmation.dataset.href"
                     class="w-full px-5 py-3 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-lg sm:w-auto sm:px-4 sm:py-2 active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red">
@@ -141,7 +141,6 @@
                 </button>
             </x-slot>
         </x-laravel-visualconsole::modal>
-
         <script>
             let artisan = document.querySelector('select#artisan');
         </script>
