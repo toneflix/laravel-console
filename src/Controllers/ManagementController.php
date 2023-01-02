@@ -202,7 +202,7 @@ class ManagementController extends Controller
                 'X-Hub-Signature',
                 $request->input('X-Hub-Signature'),
                 $request->header(
-                    'X-Signature',
+                    'X-Signature-256',
                     $request->input('X-Signature')
                 )
             );

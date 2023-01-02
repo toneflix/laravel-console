@@ -4,8 +4,7 @@ namespace ToneflixCode\LaravelVisualConsole\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Illuminate\Validation\UnauthorizedException;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
+use Illuminate\Support\Facades\Log;
 use ToneflixCode\LaravelVisualConsole\HttpStatus;
 
 class SecretToken
@@ -20,11 +19,11 @@ class SecretToken
     public function handle(Request $request, Closure $next)
     {
         $signature = $request->header(
-            'X-Hub-Signature',
-            $request->input('X-Hub-Signature'),
+            'x-hub-Signature-256',
+            $request->input('x-hub-signature'),
             $request->header(
-                'X-Signature',
-                $request->input('X-Signature')
+                'x-signature',
+                $request->input('x-signature')
             )
         );
 
