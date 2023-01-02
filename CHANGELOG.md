@@ -48,4 +48,5 @@ All notable changes to `laravel-visualconsole` will be documented in this file
 -   Fixed all known bugs
 -   Added the artisan webhook route
 -   Added the webhook secret configuration
--   Allow to use custom PHP version for composer tasks
+-   Allow to use custom PHP binary composer
+-   Allow to use custom composer binary
