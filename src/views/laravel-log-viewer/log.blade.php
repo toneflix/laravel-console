@@ -149,33 +149,37 @@
                 {{ $logs->onEachSide(0)->links('laravel-visualconsole::pagination.tailwind') }}
                 <div class="p-3">
                     @if ($current_file)
-                        <a class="px-1 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple cursor-pointer"
+                        <button
+                            class="px-1 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple cursor-pointer"
                             data-href="?dl={{ \Illuminate\Support\Facades\Crypt::encrypt($current_file) }}{{ $current_folder ? '&f=' . \Illuminate\Support\Facades\Crypt::encrypt($current_folder) : '' }}"
                             @click.prevent="run($el.dataset.href, $refs.confirmation, ['dhl'])">
                             <i class="ri-download-fill"></i> Download file
-                        </a>
+                        </button>
                         -
-                        <a class="px-1 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple cursor-pointer"
+                        <button
+                            class="px-1 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple cursor-pointer"
                             id="clean-log"
                             data-href="?clean={{ \Illuminate\Support\Facades\Crypt::encrypt($current_file) }}{{ $current_folder ? '&f=' . \Illuminate\Support\Facades\Crypt::encrypt($current_folder) : '' }}"
                             @click.prevent="run($el.dataset.href, $refs.confirmation, ['clean'])">
                             <i class="ri-refresh-fill"></i> Clean file
-                        </a>
+                        </button>
                         -
-                        <a class="px-1 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple cursor-pointer"
+                        <button
+                            class="px-1 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple cursor-pointer"
                             id="delete-log"
                             data-href="?del={{ \Illuminate\Support\Facades\Crypt::encrypt($current_file) }}{{ $current_folder ? '&f=' . \Illuminate\Support\Facades\Crypt::encrypt($current_folder) : '' }}"
                             @click.prevent="run($el.dataset.href, $refs.confirmation, ['del'])">
                             <i class="ri-delete-bin-fill"></i> Delete file
-                        </a>
+                        </button>
                         @if (count($files) > 1)
                             -
-                            <a class="px-1 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple cursor-pointer"
+                            <button
+                                class="px-1 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple cursor-pointer"
                                 id="delete-all-log"
                                 data-href="?delall=true{{ $current_folder ? '&f=' . \Illuminate\Support\Facades\Crypt::encrypt($current_folder) : '' }}"
                                 @click.prevent="run($el.dataset.href, $refs.confirmation, ['delall'])">
                                 <i class="ri-delete-bin-3-fill"></i> Delete all files
-                            </a>
+                            </button>
                         @endif
                     @endif
                 </div>

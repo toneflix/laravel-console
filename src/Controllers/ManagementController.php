@@ -19,9 +19,10 @@ class ManagementController extends Controller
 {
     protected $commands = [
         ['warn' => false, 'command' => 'artisan/list', 'label' => 'Help and Info'],
+        ['warn' => true, 'command' => 'artisan/list', 'label' => 'Help and Info (With Warning)'],
         ['warn' => false, 'command' => 'artisan/storage:link', 'label' => 'Sym Link Storage'],
         ['warn' => false, 'command' => 'artisan/queue:work', 'label' => 'Run Queues'],
-        ['warn' => false, 'command' => 'artisan/queue:retry all', 'label' => 'Retry All Failed Jobs'],
+        ['warn' => false, 'command' => 'artisan/queue:retry/all', 'label' => 'Retry All Failed Jobs'],
         ['warn' => false, 'command' => 'artisan/storage:link', 'label' => 'Sym Link Storage'],
         ['warn' => false, 'command' => 'artisan/migrate', 'label' => 'Migrate Database'],
         ['warn' => true, 'command' => 'artisan/db:seed', 'label' => 'Seed Database'],
@@ -32,16 +33,16 @@ class ManagementController extends Controller
         ['warn' => false, 'command' => 'artisan/optimize:clear', 'label' => 'Clear Cache'],
         ['warn' => false, 'command' => 'artisan/route:list', 'label' => 'Route List'],
         ['warn' => true, 'command' => 'artisan/migrate:rollback', 'label' => 'Rollback Last Database Migration'],
-        ['warn' => true, 'command' => 'artisan/migrate:fresh --seed', 'label' => 'Refresh Database'],
-        ['warn' => true, 'command' => 'artisan/system:control backup', 'label' => 'System Backup'],
-        ['warn' => false, 'command' => 'artisan/system:control -h', 'label' => 'System Control Help'],
-        ['warn' => null, 'command' => 'artisan/system:control reset -b', 'label' => 'System Reset (Backup)'],
-        ['warn' => null, 'command' => 'artisan/system:control reset', 'label' => 'System Reset (No Backup)'],
-        ['warn' => null, 'command' => 'artisan/system:control reset -r', 'label' => 'System Reset (Restore Last Backup)'],
-        ['warn' => null, 'command' => 'artisan/system:control restore', 'label' => 'System Restore (Last Backup)'],
+        ['warn' => true, 'command' => 'artisan/migrate:fresh,--seed', 'label' => 'Refresh Database'],
+        ['warn' => true, 'command' => 'artisan/system:control,backup', 'label' => 'System Backup'],
+        ['warn' => false, 'command' => 'artisan/system:control,-h', 'label' => 'System Control Help'],
+        ['warn' => null, 'command' => 'artisan/system:control,reset -b', 'label' => 'System Reset (Backup)'],
+        ['warn' => null, 'command' => 'artisan/system:control,reset', 'label' => 'System Reset (No Backup)'],
+        ['warn' => null, 'command' => 'artisan/system:control,reset -r', 'label' => 'System Reset (Restore Last Backup)'],
+        ['warn' => null, 'command' => 'artisan/system:control,restore', 'label' => 'System Restore (Last Backup)'],
         ['warn' => false, 'command' => 'artisan/system:automate', 'label' => 'System Automation'],
         ['warn' => true, 'command' => 'artisan/system:git-deploy', 'label' => 'Auto Deploy (Prod.)'],
-        ['warn' => false, 'command' => 'artisan/system:git-deploy --dev', 'label' => 'Auto Deploy (Dev)'],
+        ['warn' => false, 'command' => 'artisan/system:git-deploy,--dev', 'label' => 'Auto Deploy (Dev)'],
     ];
 
     public function index()
@@ -187,11 +188,15 @@ class ManagementController extends Controller
     {
         $errors = $code = $messages = $action = null;
         try {
-            if ($params) {
-                Artisan::call($command, $params ? explode(',', $params) : []);
-            }
-            Artisan::call(implode(' ', explode(',', $command)), []);
+            $command = implode(' ', explode(',', $command));
+            $params = collect(explode(',', $params || ''))->filter()->toArray();
+
+            Artisan::call($command, $params);
+
             $code = collect(nl2br(Artisan::output()));
+
+            $messages = session()->get('messages');
+
         } catch (CommandNotFoundException | InvalidArgumentException | RuntimeException | LogicException $e) {
             $errors = collect([$e->getMessage()]);
         }

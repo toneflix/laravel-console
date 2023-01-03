@@ -177,6 +177,24 @@
             <!-- Pagination -->
             {{ $jobs->links('laravel-visualconsole::pagination.tailwind') }}
         </div>
+        @if ($jobs->isNotEmpty())
+            <div class="mt-5">
+                <button
+                    class="px-1 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple cursor-pointer"
+                    id="delete-all-log"
+                    data-href="{{ url(config('laravel-visualconsole.route_prefix', 'system') . '/artisan/queue:flush') }}"
+                    @click.prevent="run($el.dataset.href, $refs.confirmation, ['delall'])">
+                    <i class="ri-delete-bin-3-fill"></i> Clear Failed Jobs
+                </button>
+                <button
+                    class="px-1 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-purple-600 border border-transparent rounded-md active:bg-purple-600 hover:bg-purple-700 focus:outline-none focus:shadow-outline-purple cursor-pointer"
+                    id="delete-all-log"
+                    data-href="{{ url(config('laravel-visualconsole.route_prefix', 'system') . '/artisan/queue:retry/all') }}"
+                    @click.prevent="run($el.dataset.href, $refs.confirmation, ['delall'])">
+                    <i class="ri-restart-fill"></i> Retry Failed Jobs
+                </button>
+            </div>
+        @endif
         <x-laravel-visualconsole::modal name="exception" x-cloak>
             <div class="mt-4 mb-6" style="height: 70vh; overflow-y: auto;">
                 <!-- Modal title -->

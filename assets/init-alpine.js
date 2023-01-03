@@ -48,6 +48,7 @@ function data () {
             this.isPagesMenuOpen = !this.isPagesMenuOpen
         },
         // Modal
+        modalMessage: {},
         exceptionData: {},
         stackTrace: {},
         isModalOpen: {},
@@ -73,7 +74,8 @@ function data () {
             }
         },
         confirm: {},
-        run (link, confirmation, actions) {
+        run (link, confirmation, actions, msg) {
+            this.modalMessage = msg === true ? 'This action is irreversible. Are you sure you want to continue?' : msg
             if (typeof actions === 'object') {
                 for (action in actions) {
                     if (link.includes(actions[action])) {
@@ -82,6 +84,16 @@ function data () {
                         return false;
                     }
                 }
+
+                if (msg) {
+                    this.openModal('confirm')
+                    confirmation.dataset.href = link
+                    return false;
+                }
+            } else if (msg) {
+                this.openModal('confirm')
+                confirmation.dataset.href = link
+                return false;
             }
             location.href = link
             return true;

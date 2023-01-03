@@ -120,7 +120,7 @@
                             @endforeach --}}
                         </select>
                         <button x-ref="artisan_run" data-href="{{ url('artisan/list') }}"
-                            @click="run($refs.artisan_run.dataset.href, $refs.confirmation, ['reset', 'seed'])"
+                            @click="run($refs.artisan_run.dataset.href, $refs.confirmation, [])"
                             class="absolute inset-y-0 right-0 px-4 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-red-600 border border-transparent rounded-r-md active:bg-red-600 hover:bg-red-700 focus:outline-none focus:shadow-outline-red">
                             {{ $action === 'download' ? 'Select' : 'Run' }}
                         </button>

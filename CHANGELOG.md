@@ -50,3 +50,9 @@ All notable changes to `laravel-visualconsole` will be documented in this file
 -   Added the webhook secret configuration
 -   Allow to use custom PHP binary composer
 -   Allow to use custom composer binary
+
+## 0.0.9 - 2023-01-03
+
+-   Fixed all known bugs
+-   Changed the ENV writter to Wintercms Laravel Config Writer
+-   Imporove the command interface

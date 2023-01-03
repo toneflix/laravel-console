@@ -4,7 +4,7 @@ namespace ToneflixCode\LaravelVisualConsole;
 
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\File;
-use msztorc\LaravelEnv\Env;
+use Winter\LaravelConfigWriter\EnvFile;
 
 class LaravelVisualConsole
 {
@@ -52,7 +52,7 @@ class LaravelVisualConsole
     {
         $routes = [
             ['to' => '.console.user', 'icon' => 'terminal-box', 'label' => 'Console', 'params' => []],
-            ['to' => '.console.error.logs', 'icon' => 'file-list-3', 'label' => 'Error Logs', 'params' => []],
+            ['to' => '.console.error.logs', 'icon' => 'file-list-3', 'label' => 'System Logs', 'params' => []],
             ['to' => '.console.jobs', 'icon' => 'task', 'label' => 'Scheduled Tasks', 'params' => []],
             ['to' => '.console.jobs', 'icon' => 'error-warning', 'label' => 'Failed Jobs', 'params' => ['failed']],
             ['to' => '.console.controls', 'icon' => 'database', 'label' => 'Backup Utility', 'params' => ['backup']],
@@ -74,11 +74,12 @@ class LaravelVisualConsole
 
     public function update_env( $data = [] ) : void
     {
-        collect($data)->each(function ($value, $key) {
-            if ($key && $value) {
-                $env = new Env();
-                $val = $env->setValue($key, $value);
+        $env = EnvFile::open(base_path('.env'));
+        collect($data)->each(function ($value, $key) use ($env) {
+            if ($key) {
+                $env->set($key, $value);
             }
         });
+        $env->write();
     }
 }

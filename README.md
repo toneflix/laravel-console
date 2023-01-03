@@ -121,6 +121,10 @@ The Artisan Webhook Interface allows you to remotely run any of the given artisa
 The interface can be accessed like this: `http://youdomainexample.com/system/webhooks/artisan/[command [--param1] [--param2]]`.
 When accessing this endpoint, you will have to pass the HMAC hex digest of the request body, generated using the SHA-1 or SHA-256 hash function and the secret as the HMAC key through the `X-Hub-Signature` header for Github or the `X-Signature` for other services, provided for convinience purpose.
 
+### Queues and Failed Jobs
+
+The library currently supports the database connection for queued jobs.
+
 ### Testing
 
 ```bash
