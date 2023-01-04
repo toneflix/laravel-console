@@ -80,6 +80,7 @@ The library also exposes a few custom Artisan commands to help you with certain 
         4. `--log-level=[level]`: How log the output should handled. `0` = none, `1` = console only, `2` = file and console.
         5. `--mock-php`: If your server is on a shared hosting which uses a different version on the CLI less that php 8.1, this option allows you to use a different version of php of your choice, publish the [config file](#post-installation) and update the `php_bin` option or set `VISUALCONSOLE_PHP_BINARY` option on your .env file (Make sure the path is an abosolute path to your prefered php binary). You can also set the `composer` option or set the `VISUALCONSOLE_COMPOSER` option on your .env.
         6. `--composer=[command]` Allows you to run a custom composer command, this is useful if you want to run a composer command before the deployment. E.g. `--composer="install --no-dev"`. For now this option only supports the `install` and `update` commands only.
+        7. `--ensure-commit`: Make sure there are no uncommitted changes before deployment.
 
     Example:
 

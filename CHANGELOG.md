@@ -63,3 +63,8 @@ All notable changes to `laravel-visualconsole` will be documented in this file
 -   Allow to run custom composer commands
 -   Rename the system:git-deploy command to system:deploy
 -   Add composer install command to the main dashboard
+
+## 1.0.1 - 2023-01-04
+
+-   Fixed all known bugs
+-   Added the ensure-commit command

@@ -19,6 +19,7 @@ class AutoDeploy extends Command
                             {--mock-php : Mock the php binary from the config file}
                             {--composer= : Run composer update or install}
                             {--branch= : The branch to deploy}
+                            {--ensure-commit : Make sure there are no uncommitted changes before deployment}
                             {--force : Force the deployment}
                             {--dev : Run in development mode (This will prevent composer from removing dev dependencies)}
                             {--log-level=2 : How log the output should handled. 0 = none, 1 = console only, 2 = file and console}';
@@ -67,23 +68,25 @@ class AutoDeploy extends Command
             return Command::FAILURE;
         }
 
-        // Check for uncommitted changes
-        unset($output);
-        $res = exec('git status --porcelain', $output, $retval);
-        $this->writeOutputToFile(["git status --porcelain", ...$output], $res);
+        if ($this->option('ensure-commit')) {
+            // Check for uncommitted changes
+            unset($output);
+            $res = exec('git status --porcelain', $output, $retval);
+            $this->writeOutputToFile(["git status --porcelain", ...$output], $res);
 
-        if ($retval) {
-            if (!$this->option('force')) {
-                $this->error('There are uncommitted changes. Please commit or stash them before deploying.');
-                return Command::FAILURE;
+            if ($retval) {
+                if (!$this->option('force')) {
+                    $this->error('There are uncommitted changes. Please commit or stash them before deploying.');
+                    return Command::FAILURE;
+                }
+
+                // Force deployment
+                $this->warn('Forcing deployment...');
+
+                return $this->deploy($branch);
+            } else {
+                $this->info('No uncommitted changes found.');
             }
-
-            // Force deployment
-            $this->warn('Forcing deployment...');
-
-            return $this->deploy($branch);
-        } else {
-            $this->info('No uncommitted changes found.');
         }
 
         return $this->deploy($branch);
