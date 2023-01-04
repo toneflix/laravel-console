@@ -10,7 +10,7 @@
             @else
                 <button type="button" x-ref="artisan_run"
                     data-href="{{ url(config('laravel-visualconsole.route_prefix', 'system') . '/' . $command['command']) }}"
-                    @click.prevent="run($el.dataset.href, $refs.confirmation, ['reset', 'seed'], typeof {{ $command['msg'] ?? 'true' }} === 'string' ? '{{ $command['msg'] ?? 'true' }}' : {{ $command['msg'] ?? 'true' }})"
+                    @click.prevent="run($el.dataset.href, $refs.confirmation, [])"
                     class="inline-block m-0.5 px-2 py-1 border border-blue-400 text-blue-400 text-xs rounded hover:bg-black hover:bg-opacity-5 focus:outline-none focus:ring-0 transition duration-150 ease-in-out">{{ $command['label'] }}</button>
             @endif
         @endforeach

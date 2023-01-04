@@ -41,8 +41,12 @@ class ManagementController extends Controller
         ['warn' => null, 'command' => 'artisan/system:control,reset -r', 'label' => 'System Reset (Restore Last Backup)'],
         ['warn' => null, 'command' => 'artisan/system:control,restore', 'label' => 'System Restore (Last Backup)'],
         ['warn' => false, 'command' => 'artisan/system:automate', 'label' => 'System Automation'],
-        ['warn' => true, 'command' => 'artisan/system:git-deploy', 'label' => 'Auto Deploy (Prod.)'],
-        ['warn' => false, 'command' => 'artisan/system:git-deploy,--dev', 'label' => 'Auto Deploy (Dev)'],
+        ['warn' => false, 'command' => 'artisan/system:deploy,--composer=install,--dev,--mock-php', 'label' => 'Composer Install (Dev)'],
+        ['warn' => true, 'command' => 'artisan/system:deploy,--composer=install,--mock-php', 'label' => 'Composer Install'],
+        ['warn' => false, 'command' => 'artisan/system:deploy,--composer=update,--dev,--mock-php', 'label' => 'Composer Update (Dev)'],
+        ['warn' => true, 'command' => 'artisan/system:deploy,--composer=update,--mock-php', 'label' => 'Composer Update'],
+        ['warn' => true, 'command' => 'artisan/system:deploy', 'label' => 'Auto Deploy (Prod.)'],
+        ['warn' => false, 'command' => 'artisan/system:deploy,--dev', 'label' => 'Auto Deploy (Dev)'],
     ];
 
     public function index()

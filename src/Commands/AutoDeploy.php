@@ -15,8 +15,9 @@ class AutoDeploy extends Command
      *
      * @var string
      */
-    protected $signature = 'system:git-deploy
+    protected $signature = 'system:deploy
                             {--mock-php : Mock the php binary from the config file}
+                            {--composer= : Run composer update or install}
                             {--branch= : The branch to deploy}
                             {--force : Force the deployment}
                             {--dev : Run in development mode (This will prevent composer from removing dev dependencies)}
@@ -39,6 +40,16 @@ class AutoDeploy extends Command
         $this->logLevel = intval($this->option('log-level') ?? '1');
         if ($this->logLevel > 2) {
             $this->logLevel = 2;
+        }
+
+        // Run composer commands if option is set
+        if ($this->option('composer')) {
+            if (!in_array($this->option('composer'), ['update', 'install'])) {
+                $this->error('Invalid composer option. Please use "update" or "install".');
+                return Command::FAILURE;
+            } else {
+                return $this->runComposer($this->option('composer'));
+            }
         }
 
         $branch = $this->option('branch') ?? 'main';
@@ -106,30 +117,8 @@ class AutoDeploy extends Command
         }
 
         // Run composer
-        $this->info('Running composer...');
-        $compose = '';
-        if ($this->option('mock-php')) {
-            $compose .= file_exists(config('laravel-visualconsole.php_bin'))
-                ? config('laravel-visualconsole.php_bin')
-                : PHP_BINARY;
-
-            $compose .=  ' ';
-            $compose .=  file_exists(config('laravel-visualconsole.composer'))
-                ? config('laravel-visualconsole.composer')
-                : exec('which composer');
-        } else {
-            $compose .= 'composer';
-        }
-
-        $compose .= $this->option('dev') ? ' install' : ' install --no-dev';
-        $compose .= ' --ignore-platform-reqs | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2};?)?)?[mGK]//g"';
-        unset($output);
-
-        $res = exec($compose, $output, $retval);
-
-        $this->writeOutputToFile([$compose, ...$output], $res);
+        $retval = $this->runComposer($this->option('composer'));
         if ($retval) {
-            $this->error('There was an error running composer.');
             return Command::FAILURE;
         }
 
@@ -144,6 +133,55 @@ class AutoDeploy extends Command
         $this->writeOutputToFile(["php artisan migrate", ...$output], $res);
         if ($retval) {
             $this->error('There was an error running migrations.');
+            return Command::FAILURE;
+        }
+
+        return Command::SUCCESS;
+    }
+
+    /**
+     * Run composer commands with php
+     *
+     * @param array $output
+     * @return void
+     */
+    public function runComposer($command)
+    {
+        $this->info("Running composer {$command}...");
+
+        $compose = '';
+
+        if ($this->option('mock-php')) {
+            $compose .= file_exists(config('laravel-visualconsole.php_bin'))
+                ? config('laravel-visualconsole.php_bin')
+                : PHP_BINARY;
+
+            $compose .=  ' ';
+            $compose .=  file_exists(config('laravel-visualconsole.composer'))
+                ? config('laravel-visualconsole.composer')
+                : exec('which composer');
+        } else {
+            $compose .= 'composer';
+        }
+
+        $compose .= ' ' .$command;
+
+        if (str($command)->contains('install')) {
+            $compose .= $this->option('dev') ? '' : ' --no-dev';
+            $compose .= ' --ignore-platform-reqs';
+        }
+
+        // Pregreplace extra spaces
+        $compose = preg_replace('/\s+/', ' ', $compose);
+
+
+        $compose .= ' | sed -r "s/\x1B\[([0-9]{1,3}(;[0-9]{1,2};?)?)?[mGK]//g"';
+
+        $res = exec($compose, $output, $retval);
+
+        $this->writeOutputToFile([$compose, ...$output], $res);
+        if ($retval) {
+            $this->error('There was an error running composer.');
             return Command::FAILURE;
         }
 
@@ -171,6 +209,10 @@ class AutoDeploy extends Command
             if ($key === 0 || $line === '') {
                 continue;
             }
+
+            // Remove ANSI color codes
+            $line = preg_replace('/\x1B\[([0-9]{1,3}(;[0-9]{1,2};?)?)?[mGK]/', '', $line);
+
             // Increment the count from 1
             $this->count++;
             // Append the output to the file
@@ -190,6 +232,7 @@ class AutoDeploy extends Command
     {
         if ($this->logLevel === 2) {
             $trace = [];
+            // dd($result, $output);
             foreach ($output as $key => $line) {
                 if ($key === 0 || $line === '' || $line === 'true') {
                     continue;

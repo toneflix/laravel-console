@@ -56,3 +56,10 @@ All notable changes to `laravel-visualconsole` will be documented in this file
 -   Fixed all known bugs
 -   Changed the ENV writter to Wintercms Laravel Config Writer
 -   Imporove the command interface
+
+## 1.0.0 - 2023-01-04
+
+-   Fixed all known bugs
+-   Allow to run custom composer commands
+-   Rename the system:git-deploy command to system:deploy
+-   Add composer install command to the main dashboard

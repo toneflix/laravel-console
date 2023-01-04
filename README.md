@@ -69,7 +69,7 @@ If you which to change the behaviour you should check the [Post Installation](#p
 
 The library also exposes a few custom Artisan commands to help you with certain everyday tasks, even though these commandsa are accessible through the UI, they are still Artisan commands and are as much accessible through your terminal.
 
-1. `system:git-deploy`: Automatically deploys the latest code from the git repository associated with your project.
+1. `system:deploy`: Automatically deploys the latest code from the git repository associated with your project.
    Before you run this command, make sure you have set up a git repository and have added a remote named "origin".
 
     - ARGUMENTS
@@ -77,13 +77,14 @@ The library also exposes a few custom Artisan commands to help you with certain 
         1. `--branch=`: The branch to deploy, the default is `main`.
         2. `--force`: Force the deployment.
         3. `--dev`: Run in development mode (This will prevent composer from removing dev dependencies)
-        4. `--log-level=2`: How log the output should handled. `0` = none, `1` = console only, `2` = file and console.
+        4. `--log-level=[level]`: How log the output should handled. `0` = none, `1` = console only, `2` = file and console.
         5. `--mock-php`: If your server is on a shared hosting which uses a different version on the CLI less that php 8.1, this option allows you to use a different version of php of your choice, publish the [config file](#post-installation) and update the `php_bin` option or set `VISUALCONSOLE_PHP_BINARY` option on your .env file (Make sure the path is an abosolute path to your prefered php binary). You can also set the `composer` option or set the `VISUALCONSOLE_COMPOSER` option on your .env.
+        6. `--composer=[command]` Allows you to run a custom composer command, this is useful if you want to run a composer command before the deployment. E.g. `--composer="install --no-dev"`. For now this option only supports the `install` and `update` commands only.
 
     Example:
 
     ```php
-    php artisan system:git-deploy --branch=main
+    php artisan system:deploy --branch=main
     ```
 
 2. `system:control`: Helps you perforom common system tasks like backup, backup restore and system reset.
